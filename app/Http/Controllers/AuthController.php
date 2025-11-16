@@ -12,6 +12,62 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/register",
+     *     summary="ثبت‌نام کاربر جدید",
+     *     description="ثبت‌نام کاربر با ایمیل و رمز عبور و ارسال کد",
+     *     tags={"Authentication"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="password", type="string", format="password", minLength=6, example="123456", description="رمز عبور (حداقل 6 کاراکتر)")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="ثبت‌نام موفق",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="ثبت‌نام کاربر با موفقیت انجام شد. کد تأیید برای شما ارسال شد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در ثبت‌نام کاربر."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="email",
+     *                     type="array",
+     *
+     *                     @OA\Items(type="string", example="The email has already been taken.")
+     *                 ),
+     *
+     *                 @OA\Property(
+     *                     property="password",
+     *                     type="array",
+     *
+     *                     @OA\Items(type="string", example="The password must be at least 6 characters.")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -36,6 +92,64 @@ class AuthController extends Controller
         return response()->json(['message' => 'ثبت‌نام کاربر با موفقیت انجام شد. کد تأیید برای شما ارسال شد.']);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/verify-otp",
+     *     summary="تأیید کد",
+     *     description="تأیید ایمیل کاربر با استفاده از کد و دریافت توکن احراز هویت",
+     *     tags={"Authentication"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"email","code"},
+     *
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="code", type="string", example="123456", description="کد 6 رقمی OTP")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="تأیید موفق",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="ثبت‌نام کاربر با موفقیت انجام شد."),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time")
+     *             ),
+     *             @OA\Property(property="token", type="string", example="1|randomtokenstring...")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="کد نامعتبر یا منقضی شده",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کد تأیید نامعتبر است.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در احراز هویت کاربر."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function verifyOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -69,6 +183,63 @@ class AuthController extends Controller
         return response()->json(['message' => 'ثبت‌نام کاربر با موفقیت انجام شد.', 'user' => $user, 'token' => $token]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/login",
+     *     summary="ورود با رمز عبور",
+     *     description="ورود کاربر با استفاده از ایمیل و رمز عبور",
+     *     tags={"Authentication"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="password", type="string", format="password", example="123456", description="رمز عبور کاربر")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="ورود موفق",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="ورود کاربر با موفقیت انجام شد."),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="email", type="string", example="user@example.com")
+     *             ),
+     *             @OA\Property(property="token", type="string", example="1|randomtokenstring...")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="اطلاعات ورود نادرست یا کاربر احراز هویت نشده",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="پسورد وارد شده اشتباه است.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در ورود کاربر."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -102,6 +273,55 @@ class AuthController extends Controller
         return response()->json(['message' => 'ورود کاربر با موفقیت انجام شد.', 'user' => $user, 'token' => $token]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/request-otp-login",
+     *     summary="درخواست کد برای ورود",
+     *     description="ارسال کد به ایمیل کاربر برای ورود بدون رمز عبور",
+     *     tags={"Authentication"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="کد ارسال شد",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کد ورود برای شما ارسال شد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="کاربر یافت نشد",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کاربر مورد نظر یافت نشد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در ورود کاربر."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function requestOtpLogin(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -126,6 +346,63 @@ class AuthController extends Controller
         return response()->json(['message' => 'کد ورود برای شما ارسال شد.']);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/login-with-otp",
+     *     summary="ورود با کد",
+     *     description="ورود کاربر با استفاده از کد",
+     *     tags={"Authentication"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"email","code"},
+     *
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="code", type="string", example="123456", description="کد 6 رقمی OTP")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="ورود موفق",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="ورود کاربر با موفقیت انجام شد."),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="email", type="string", example="user@example.com")
+     *             ),
+     *             @OA\Property(property="token", type="string", example="1|randomtokenstring...")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="کد نامعتبر یا منقضی شده",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کد تأیید نامعتبر است.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در ورود کاربر."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
     public function loginWithOtp(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -163,6 +440,45 @@ class AuthController extends Controller
         return response()->json(['message' => 'ورود کاربر با موفقیت انجام شد.', 'user' => $user, 'token' => $token]);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/logout",
+     *     summary="خروج از حساب کاربری",
+     *     description="خروج کاربر و حذف توکن فعلی",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="خروج موفق",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="خروج از حساب با موفقیت انجام شد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="احراز هویت نشده",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=500,
+     *         description="خطای سرور",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="خطایی در خروج رخ داد.")
+     *         )
+     *     )
+     * )
+     */
     public function logout(Request $request)
     {
         $token = $request->user()->currentAccessToken();
