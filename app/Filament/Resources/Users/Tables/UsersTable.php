@@ -29,13 +29,15 @@ class UsersTable
                     ->sortable()
                     ->placeholder('تأیید نشده'),
                 TextColumn::make('created_at')
+                    ->label('تاریخ ایجاد')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->jalaliDateTime()
+                    ->sortable(),
                 TextColumn::make('updated_at')
+                    ->label('تاریخ آپدیت')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->jalaliDateTime()
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -61,7 +63,30 @@ class UsersTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->using(function ($records, $action) {
+                            $cannotDelete = [];
+
+                            foreach ($records as $record) {
+                                if (DB::table('sessions')->where('user_id', $record->id)->exists()) {
+                                    $cannotDelete[] = $record->name;
+
+                                    continue;
+                                }
+
+                                $record->delete();
+                            }
+
+                            if (! empty($cannotDelete)) {
+                                \Filament\Notifications\Notification::make()
+                                    ->danger()
+                                    ->title('خطا در حذف')
+                                    ->body('کاربر(های) '.implode(', ', $cannotDelete).' در حال حاضر سشن فعال دارند و قابل حذف نیستند.')
+                                    ->send();
+
+                                $action->cancel();
+                            }
+                        }),
                 ]),
             ]);
     }
