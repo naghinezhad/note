@@ -25,6 +25,7 @@ class UsersTable
                 TextColumn::make('email_verified_at')
                     ->label('تاریخ تأیید ایمیل')
                     ->dateTime()
+                    ->jalaliDateTime()
                     ->sortable()
                     ->placeholder('تأیید نشده'),
                 TextColumn::make('created_at')

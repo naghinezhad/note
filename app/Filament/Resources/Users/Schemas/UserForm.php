@@ -21,7 +21,7 @@ class UserForm
                     ->required()
                     ->unique(User::class, 'email', ignoreRecord: true),
                 DateTimePicker::make('email_verified_at')
-                    ->label('تاریخ تأیید ایمیل'),
+                    ->label('تاریخ تأیید ایمیل')->jalali(weekdaysShort: true),
                 TextInput::make('password')
                     ->label('رمز عبور')
                     ->password()
