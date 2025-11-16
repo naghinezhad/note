@@ -3,10 +3,12 @@
 namespace App\Filament\Resources\Users\Tables;
 
 use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Support\Facades\DB;
 
 class UsersTable
 {
@@ -15,13 +17,16 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label('نام')
                     ->searchable(),
                 TextColumn::make('email')
-                    ->label('Email address')
+                    ->label('ایمیل')
                     ->searchable(),
                 TextColumn::make('email_verified_at')
+                    ->label('تاریخ تأیید ایمیل')
                     ->dateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->placeholder('تأیید نشده'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -36,6 +41,22 @@ class UsersTable
             ])
             ->recordActions([
                 EditAction::make(),
+                DeleteAction::make()
+                    ->using(function ($record, $action) {
+                        if (DB::table('sessions')->where('user_id', $record->id)->exists()) {
+                            \Filament\Notifications\Notification::make()
+                                ->danger()
+                                ->title('خطا در حذف')
+                                ->body('این کاربر در حال حاضر سشن فعال دارد و قابل حذف نیست.')
+                                ->send();
+
+                            $action->cancel();
+
+                            return;
+                        }
+
+                        $record->delete();
+                    }),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
