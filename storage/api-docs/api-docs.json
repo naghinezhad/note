@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://my-default-host.com",
+            "url": "https://notin.ir/api",
             "description": ""
         }
     ],
