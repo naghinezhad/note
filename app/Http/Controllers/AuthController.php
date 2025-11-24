@@ -502,7 +502,7 @@ class AuthController extends Controller
         ]);
 
         $subject = $type === 'ثبت‌نام' ? 'کد تأیید ثبت‌نام' : 'کد تأیید ورود';
-        Mail::raw("کد OTP شما: $code", function ($message) use ($email, $subject) {
+        Mail::raw("Code OTP: $code", function ($message) use ($email, $subject) {
             $message->to($email)->subject($subject);
         });
     }
