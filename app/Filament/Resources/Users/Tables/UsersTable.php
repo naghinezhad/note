@@ -22,6 +22,11 @@ class UsersTable
                 TextColumn::make('email')
                     ->label('ایمیل')
                     ->searchable(),
+                TextColumn::make('is_admin')
+                    ->label('نقش')
+                    ->formatStateUsing(fn ($state) => $state ? 'ادمین' : 'کاربر عادی')
+                    ->badge()
+                    ->color(fn ($state) => $state ? 'success' : 'gray'),
                 TextColumn::make('email_verified_at')
                     ->label('تاریخ تأیید ایمیل')
                     ->dateTime()

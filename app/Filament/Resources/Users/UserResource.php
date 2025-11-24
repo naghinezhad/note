@@ -25,8 +25,13 @@ class UserResource extends Resource
     protected static ?string $navigationLabel = 'کاربران';
 
     protected static ?string $pluralModelLabel = 'کاربران';
-    
+
     protected static ?string $modelLabel = 'کاربر';
+
+    public static function getNavigationSort(): ?int
+    {
+        return 1;
+    }
 
     public static function form(Schema $schema): Schema
     {
