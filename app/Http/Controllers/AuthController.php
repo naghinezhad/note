@@ -70,14 +70,25 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
+        $messages = [
+            'email.required' => 'لطفاً ایمیل خود را وارد کنید.',
+            'email.email' => 'فرمت ایمیل صحیح نیست.',
+            'email.unique' => 'این ایمیل قبلاً ثبت شده است.',
+            'password.required' => 'لطفاً رمز عبور خود را وارد کنید.',
+            'password.min' => 'رمز عبور باید حداقل ۶ کاراکتر باشد.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
+
+            $firstError = $validator->errors()->first();
+
             return response()->json([
-                'message' => 'مشکل در ثبت‌نام کاربر.',
+                'message' => $firstError,
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -89,7 +100,7 @@ class AuthController extends Controller
 
         $this->sendOtp($user->email, 'ثبت‌نام');
 
-        return response()->json(['message' => 'ثبت‌نام کاربر با موفقیت انجام شد. کد تأیید برای شما ارسال شد.']);
+        return response()->json(['message' => 'ثبت‌نام با موفقیت انجام شد. کد تأیید ارسال شد.']);
     }
 
     /**
@@ -152,14 +163,24 @@ class AuthController extends Controller
      */
     public function verifyOtp(Request $request)
     {
+        $messages = [
+            'email.required' => 'لطفاً ایمیل را وارد کنید.',
+            'email.email' => 'فرمت ایمیل صحیح نیست.',
+            'code.required' => 'لطفاً کد تأیید را وارد کنید.',
+            'code.string' => 'کد تأیید باید به صورت متن باشد.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'code' => 'required|string',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
+
+            $firstError = $validator->errors()->first();
+
             return response()->json([
-                'message' => 'مشکل در احراز هویت کاربر.',
+                'message' => $firstError,
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -170,17 +191,22 @@ class AuthController extends Controller
             ->first();
 
         if (! $otp) {
-            return response()->json(['message' => 'کد تأیید نامعتبر است.'], 400);
+            return response()->json(['message' => 'کد تأیید نامعتبر است یا منقضی شده است.'], 400);
         }
 
         $user = User::where('email', $request->email)->first();
         $user->markEmailAsVerified();
         $user->save();
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         $otp->delete();
 
-        return response()->json(['message' => 'ثبت‌نام کاربر با موفقیت انجام شد.', 'user' => $user, 'token' => $token]);
+        return response()->json([
+            'message' => 'احراز هویت با موفقیت انجام شد.',
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
 
     /**
@@ -242,14 +268,23 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        $messages = [
+            'email.required' => 'لطفاً ایمیل را وارد کنید.',
+            'email.email' => 'فرمت ایمیل صحیح نیست.',
+            'password.required' => 'لطفاً رمز عبور را وارد کنید.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
+
+            $firstError = $validator->errors()->first();
+
             return response()->json([
-                'message' => 'مشکل در ورود کاربر.',
+                'message' => $firstError,
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -257,20 +292,24 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (! $user) {
-            return response()->json(['message' => 'کاربر مورد نظر یافت نشد.'], 401);
+            return response()->json(['message' => 'کاربری با این ایمیل یافت نشد.'], 401);
         }
 
         if (! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'پسورد وارد شده اشتباه است.'], 401);
+            return response()->json(['message' => 'رمز عبور وارد شده صحیح نیست.'], 401);
         }
 
         if (! $user->hasVerifiedEmail()) {
-            return response()->json(['message' => 'کاربر احراز هویت نشده است.'], 401);
+            return response()->json(['message' => 'ایمیل شما هنوز تأیید نشده است.'], 401);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return response()->json(['message' => 'ورود کاربر با موفقیت انجام شد.', 'user' => $user, 'token' => $token]);
+        return response()->json([
+            'message' => 'ورود با موفقیت انجام شد.',
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
 
     /**
@@ -324,13 +363,20 @@ class AuthController extends Controller
      */
     public function requestOtpLogin(Request $request)
     {
+        $messages = [
+            'email.required' => 'لطفاً ایمیل را وارد کنید.',
+            'email.email' => 'فرمت ایمیل صحیح نیست.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+
             return response()->json([
-                'message' => 'مشکل در ورود کاربر.',
+                'message' => $firstError,
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -338,12 +384,20 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (! $user) {
-            return response()->json(['message' => 'کاربر مورد نظر یافت نشد.'], 400);
+            return response()->json([
+                'message' => 'کاربری با این ایمیل یافت نشد.',
+            ], 400);
         }
 
-        $this->sendOtp($user->email, 'ورود');
+        $result = $this->sendOtp($user->email, 'ورود');
 
-        return response()->json(['message' => 'کد ورود برای شما ارسال شد.']);
+        if ($result instanceof \Illuminate\Http\JsonResponse) {
+            return $result;
+        }
+
+        return response()->json([
+            'message' => 'کد ورود برای شما ارسال شد.',
+        ]);
     }
 
     /**
@@ -405,14 +459,23 @@ class AuthController extends Controller
      */
     public function loginWithOtp(Request $request)
     {
+        $messages = [
+            'email.required' => 'لطفاً ایمیل را وارد کنید.',
+            'email.email' => 'فرمت ایمیل صحیح نیست.',
+            'code.required' => 'لطفاً کد تأیید را وارد کنید.',
+            'code.string' => 'کد تأیید باید به صورت متن باشد.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'code' => 'required|string',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+
             return response()->json([
-                'message' => 'مشکل در ورود کاربر.',
+                'message' => $firstError,
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -423,10 +486,18 @@ class AuthController extends Controller
             ->first();
 
         if (! $otp) {
-            return response()->json(['message' => 'کد تأیید نامعتبر است.'], 400);
+            return response()->json([
+                'message' => 'کد تأیید نامعتبر است یا منقضی شده است.',
+            ], 400);
         }
 
         $user = User::where('email', $request->email)->first();
+
+        if (! $user) {
+            return response()->json([
+                'message' => 'کاربری با این ایمیل یافت نشد.',
+            ], 400);
+        }
 
         if (! $user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
@@ -437,7 +508,11 @@ class AuthController extends Controller
 
         $otp->delete();
 
-        return response()->json(['message' => 'ورود کاربر با موفقیت انجام شد.', 'user' => $user, 'token' => $token]);
+        return response()->json([
+            'message' => 'ورود کاربر با موفقیت انجام شد.',
+            'user' => $user,
+            'token' => $token,
+        ]);
     }
 
     /**
@@ -483,17 +558,52 @@ class AuthController extends Controller
     {
         $token = $request->user()->currentAccessToken();
 
-        if ($token && $token->delete()) {
-            return response()->json(['message' => 'خروج از حساب با موفقیت انجام شد.']);
-        } else {
-            return response()->json(['message' => 'خطایی در خروج رخ داد.'], 500);
+        if (! $token) {
+            return response()->json([
+                'message' => 'توکن معتبر یافت نشد.',
+            ], 401);
         }
+
+        if ($token->delete()) {
+            return response()->json([
+                'message' => 'خروج از حساب با موفقیت انجام شد.',
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'خطایی در خروج از حساب رخ داد.',
+        ], 500);
     }
 
     private function sendOtp($email, $type)
     {
+        $maxRequests = 3;
+        $timeLimitHours = 3;
+
+        $windowStart = Carbon::now()->subHours($timeLimitHours);
+
+        $recentOtps = Otp::where('email', $email)
+            ->where('created_at', '>=', $windowStart)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        if ($recentOtps->count() >= $maxRequests) {
+
+            $oldestOtp = $recentOtps->first();
+
+            $nextAllowedTime = Carbon::parse($oldestOtp->created_at)->addHours($timeLimitHours);
+
+            $remainingSeconds = now()->diffInSeconds($nextAllowedTime);
+
+            $remainingMinutes = ceil($remainingSeconds / 60);
+
+            return response()->json([
+                'message' => "شما به محدودیت ارسال کد رسیده‌اید. لطفاً {$remainingMinutes} دقیقه دیگر دوباره تلاش کنید.",
+            ], 429);
+        }
+
         $code = str_pad(random_int(1000, 9999), 4, '0', STR_PAD_LEFT);
-        $expiresAt = Carbon::now()->addMinutes(1);
+        $expiresAt = Carbon::now()->addMinutes(2);
 
         Otp::create([
             'email' => $email,
@@ -501,7 +611,10 @@ class AuthController extends Controller
             'expires_at' => $expiresAt,
         ]);
 
-        $subject = $type === 'ثبت‌نام' ? 'کد تأیید ثبت‌نام' : 'کد تأیید ورود';
+        $subject = ($type === 'ثبت‌نام')
+            ? 'کد تأیید ثبت‌نام'
+            : 'کد تأیید ورود';
+
         Mail::raw("Code OTP: $code", function ($message) use ($email, $subject) {
             $message->to($email)->subject($subject);
         });
