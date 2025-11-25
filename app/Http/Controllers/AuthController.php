@@ -198,7 +198,8 @@ class AuthController extends Controller
         $user->markEmailAsVerified();
         $user->save();
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $expiresAt = now()->addDays(30);
+        $token = $user->createToken('auth_token', [], $expiresAt)->plainTextToken;
 
         $otp->delete();
 
@@ -206,6 +207,7 @@ class AuthController extends Controller
             'message' => 'احراز هویت با موفقیت انجام شد.',
             'user' => $user,
             'token' => $token,
+            'expires_at' => $expiresAt->toDateTimeString(),
         ]);
     }
 
@@ -303,12 +305,14 @@ class AuthController extends Controller
             return response()->json(['message' => 'ایمیل شما هنوز تأیید نشده است.'], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $expiresAt = now()->addDays(30);
+        $token = $user->createToken('auth_token', [], $expiresAt)->plainTextToken;
 
         return response()->json([
             'message' => 'ورود با موفقیت انجام شد.',
             'user' => $user,
             'token' => $token,
+            'expires_at' => $expiresAt->toDateTimeString(),
         ]);
     }
 
@@ -504,7 +508,8 @@ class AuthController extends Controller
             $user->save();
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $expiresAt = now()->addDays(30);
+        $token = $user->createToken('auth_token', [], $expiresAt)->plainTextToken;
 
         $otp->delete();
 
@@ -512,6 +517,7 @@ class AuthController extends Controller
             'message' => 'ورود کاربر با موفقیت انجام شد.',
             'user' => $user,
             'token' => $token,
+            'expires_at' => $expiresAt->toDateTimeString(),
         ]);
     }
 
