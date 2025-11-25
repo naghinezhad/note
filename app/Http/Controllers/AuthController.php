@@ -581,6 +581,347 @@ class AuthController extends Controller
         ], 500);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/forgot-password",
+     *     summary="درخواست کد برای فراموشی رمز عبور",
+     *     description="ارسال کد تأیید به ایمیل کاربر برای بازیابی رمز عبور",
+     *     tags={"Authentication"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"email"},
+     *
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="کد ارسال شد",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کد بازیابی رمز عبور برای شما ارسال شد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="کاربر یافت نشد",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کاربری با این ایمیل یافت نشد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در درخواست بازیابی رمز عبور."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=429,
+     *         description="محدودیت تعداد درخواست",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="شما به محدودیت ارسال کد رسیده‌اید.")
+     *         )
+     *     )
+     * )
+     */
+    public function forgotPassword(Request $request)
+    {
+        $messages = [
+            'email.required' => 'لطفاً ایمیل را وارد کنید.',
+            'email.email' => 'فرمت ایمیل صحیح نیست.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ], $messages);
+
+        if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+
+            return response()->json([
+                'message' => $firstError,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user) {
+            return response()->json([
+                'message' => 'کاربری با این ایمیل یافت نشد.',
+            ], 400);
+        }
+
+        $result = $this->sendOtp($user->email, 'فراموشی رمز عبور');
+
+        if ($result instanceof \Illuminate\Http\JsonResponse) {
+            return $result;
+        }
+
+        return response()->json([
+            'message' => 'کد بازیابی رمز عبور برای شما ارسال شد.',
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/verify-forgot-password-otp",
+     *     summary="تأیید کد فراموشی رمز عبور",
+     *     description="بررسی اعتبار کد ارسال شده برای فراموشی رمز عبور",
+     *     tags={"Authentication"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"email","code"},
+     *
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="code", type="string", example="1234", description="کد 4 رقمی OTP")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="تأیید موفق",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کد تأیید شد. می‌توانید رمز عبور جدید را وارد کنید."),
+     *             @OA\Property(property="reset_token", type="string", example="eyJ0eXAiOiJKV1QiLCJhbGc...", description="توکن موقت برای تغییر رمز عبور")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="کد نامعتبر یا منقضی شده",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="کد تأیید نامعتبر است یا منقضی شده است.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در تأیید کد."),
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function verifyForgotPasswordOtp(Request $request)
+    {
+        $messages = [
+            'email.required' => 'لطفاً ایمیل را وارد کنید.',
+            'email.email' => 'فرمت ایمیل صحیح نیست.',
+            'code.required' => 'لطفاً کد تأیید را وارد کنید.',
+            'code.string' => 'کد تأیید باید به صورت متن باشد.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'code' => 'required|string',
+        ], $messages);
+
+        if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+
+            return response()->json([
+                'message' => $firstError,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $otp = Otp::where('email', $request->email)
+            ->where('code', $request->code)
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        if (! $otp) {
+            return response()->json([
+                'message' => 'کد تأیید نامعتبر است یا منقضی شده است.',
+            ], 400);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user) {
+            return response()->json([
+                'message' => 'کاربری با این ایمیل یافت نشد.',
+            ], 400);
+        }
+
+        $resetToken = $user->createToken('password_reset', ['reset-password'], now()->addMinutes(10))->plainTextToken;
+
+        $otp->delete();
+
+        return response()->json([
+            'message' => 'کد تأیید شد. می‌توانید رمز عبور جدید را وارد کنید.',
+            'reset_token' => $resetToken,
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/reset-password",
+     *     summary="تنظیم رمز عبور جدید",
+     *     description="تغییر رمز عبور پس از تأیید کد OTP",
+     *     tags={"Authentication"},
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"new_password","new_password_confirmation"},
+     *
+     *             @OA\Property(
+     *                 property="new_password",
+     *                 type="string",
+     *                 format="password",
+     *                 minLength=6,
+     *                 example="newpassword123",
+     *                 description="رمز عبور جدید (حداقل 6 کاراکتر)"
+     *             ),
+     *             @OA\Property(
+     *                 property="new_password_confirmation",
+     *                 type="string",
+     *                 format="password",
+     *                 example="newpassword123",
+     *                 description="تأیید رمز عبور جدید"
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="تغییر رمز عبور موفق",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="رمز عبور با موفقیت تغییر کرد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="رمز عبور و تأیید آن مطابقت ندارند",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="رمز عبور و تأیید رمز عبور مطابقت ندارند.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="احراز هویت نشده یا توکن نامعتبر",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=403,
+     *         description="توکن فاقد دسترسی لازم",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="این توکن مجاز به تغییر رمز عبور نیست.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مشکل در تغییر رمز عبور."),
+     *             @OA\Property(
+     *                 property="errors",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="new_password",
+     *                     type="array",
+     *
+     *                     @OA\Items(type="string", example="The new password must be at least 6 characters.")
+     *                 )
+     *             )
+     *         )
+     *     )
+     * )
+     */
+    public function resetPassword(Request $request)
+    {
+        $messages = [
+            'new_password.required' => 'لطفاً رمز عبور جدید را وارد کنید.',
+            'new_password.min' => 'رمز عبور جدید باید حداقل ۶ کاراکتر باشد.',
+            'new_password_confirmation.required' => 'لطفاً تأیید رمز عبور جدید را وارد کنید.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'new_password' => 'required|min:6',
+            'new_password_confirmation' => 'required',
+        ], $messages);
+
+        if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+
+            return response()->json([
+                'message' => $firstError,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        if ($request->new_password !== $request->new_password_confirmation) {
+            return response()->json([
+                'message' => 'رمز عبور و تأیید رمز عبور مطابقت ندارند.',
+            ], 400);
+        }
+
+        $token = $request->user()->currentAccessToken();
+
+        if (! $request->user()->tokenCan('reset-password')) {
+            return response()->json([
+                'message' => 'این توکن مجاز به تغییر رمز عبور نیست.',
+            ], 403);
+        }
+
+        $user = $request->user();
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        $user->tokens()->delete();
+
+        return response()->json([
+            'message' => 'رمز عبور با موفقیت تغییر کرد. لطفاً دوباره وارد شوید.',
+        ]);
+    }
+
     private function sendOtp($email, $type)
     {
         $maxRequests = 3;
