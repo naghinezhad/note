@@ -48,7 +48,10 @@ class ProfileController extends Controller
      */
     public function profile(Request $request)
     {
-        return response()->json(['message' => 'اطلاعات کاربر با موفقیت دریافت شد.', 'user' => $request->user()]);
+        return response()->json([
+            'message' => 'اطلاعات کاربر با موفقیت دریافت شد.',
+            'user' => $request->user(),
+        ]);
     }
 
     /**
@@ -143,14 +146,22 @@ class ProfileController extends Controller
      */
     public function changePassword(Request $request)
     {
+        $messages = [
+            'current_password.required' => 'لطفاً رمز عبور فعلی را وارد کنید.',
+            'new_password.required' => 'لطفاً رمز عبور جدید را وارد کنید.',
+            'new_password.min' => 'رمز عبور جدید باید حداقل ۶ کاراکتر باشد.',
+        ];
+
         $validator = Validator::make($request->all(), [
             'current_password' => 'required',
             'new_password' => 'required|min:6',
-        ]);
+        ], $messages);
 
         if ($validator->fails()) {
+            $firstError = $validator->errors()->first();
+
             return response()->json([
-                'message' => 'مشکل در احراز هویت کاربر.',
+                'message' => $firstError,
                 'errors' => $validator->errors(),
             ], 422);
         }
@@ -158,12 +169,16 @@ class ProfileController extends Controller
         $user = $request->user();
 
         if (! Hash::check($request->current_password, $user->password)) {
-            return response()->json(['message' => 'رمز عبور فعلی کاربر اشتباه است.'], 400);
+            return response()->json([
+                'message' => 'رمز عبور فعلی کاربر اشتباه است.',
+            ], 400);
         }
 
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return response()->json(['message' => 'رمز عبور کاربر با موفقیت تغییر کرد.']);
+        return response()->json([
+            'message' => 'رمز عبور کاربر با موفقیت تغییر کرد.',
+        ]);
     }
 }

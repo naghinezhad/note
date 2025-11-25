@@ -588,21 +588,21 @@ class AuthController extends Controller
             ->get();
 
         if ($recentOtps->count() >= $maxRequests) {
-
             $oldestOtp = $recentOtps->first();
-
             $nextAllowedTime = Carbon::parse($oldestOtp->created_at)->addHours($timeLimitHours);
 
             $remainingSeconds = now()->diffInSeconds($nextAllowedTime);
 
-            $remainingMinutes = ceil($remainingSeconds / 60);
+            $hours = floor($remainingSeconds / 3600);
+            $minutes = ceil(($remainingSeconds % 3600) / 60);
 
             return response()->json([
-                'message' => "شما به محدودیت ارسال کد رسیده‌اید. لطفاً {$remainingMinutes} دقیقه دیگر دوباره تلاش کنید.",
+                'message' => "شما به محدودیت ارسال کد رسیده‌اید. لطفاً {$hours} ساعت و {$minutes} دقیقه دیگر دوباره تلاش کنید.",
             ], 429);
         }
 
-        $code = str_pad(random_int(1000, 9999), 4, '0', STR_PAD_LEFT);
+        $code = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+
         $expiresAt = Carbon::now()->addMinutes(2);
 
         Otp::create([
