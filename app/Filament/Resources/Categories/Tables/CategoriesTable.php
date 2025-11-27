@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Otps\Tables;
+namespace App\Filament\Resources\Categories\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -9,23 +9,17 @@ use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
-class OtpsTable
+class CategoriesTable
 {
     public static function configure(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('email')
-                    ->label('آدرس ایمیل')
+                TextColumn::make('name')
+                    ->label('نام')
                     ->searchable(),
-                TextColumn::make('code')
-                    ->label('کد')
-                    ->searchable(),
-                TextColumn::make('expires_at')
-                    ->label('تاریخ انقضا')
-                    ->dateTime()
-                    ->jalaliDateTime()
-                    ->sortable(),
+                TextColumn::make('description')
+                    ->label('توضیحات'),
                 TextColumn::make('created_at')
                     ->label('تاریخ ایجاد')
                     ->dateTime()
