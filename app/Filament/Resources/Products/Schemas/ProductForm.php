@@ -22,7 +22,7 @@ class ProductForm
                     ->label('قیمت')
                     ->required()
                     ->numeric()
-                    ->prefix('تومان'),
+                    ->prefix('کوین'),
                 FileUpload::make('high_quality_image')
                     ->label('عکس با کیفیت')
                     ->image()

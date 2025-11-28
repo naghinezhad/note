@@ -19,49 +19,62 @@ class ProductsTable
             ->columns([
                 TextColumn::make('name')
                     ->label('نام')
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 ImageColumn::make('high_quality_image')
-                    ->label('عکس با کیفیت'),
+                    ->label('عکس با کیفیت')
+                    ->toggleable(),
                 ImageColumn::make('low_quality_image')
-                    ->label('عکس بی کیفیت'),
+                    ->label('عکس بی کیفیت')
+                    ->toggleable(),
                 TextColumn::make('price')
                     ->label('قیمت')
                     ->sortable()
-                    ->formatStateUsing(fn ($state) => number_format($state).' تومان'),
+                    ->formatStateUsing(fn ($state) => number_format($state).' کوین')
+                    ->toggleable(),
                 TextColumn::make('description')
-                    ->label('توضیحات'),
+                    ->label('توضیحات')
+                    ->toggleable(),
                 TextColumn::make('likes')
                     ->label('تعداد لایک')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('views')
                     ->label('تعداد بازدید')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('purchased')
                     ->label('تعداد خریداری شده')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('category.name')
                     ->label('دسته بندی')
                     ->sortable()
-                    ->searchable(),
+                    ->searchable()
+                    ->toggleable(),
                 IconColumn::make('is_active')
                     ->label('وضعیت')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(),
                 IconColumn::make('is_3d')
                     ->label('3d')
-                    ->boolean(),
+                    ->boolean()
+                    ->toggleable(),
                 TextColumn::make('created_at')
                     ->label('تاریخ ایجاد')
                     ->dateTime()
                     ->jalaliDateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('updated_at')
                     ->label('تاریخ آپدیت')
                     ->dateTime()
                     ->jalaliDateTime()
-                    ->sortable(),
+                    ->sortable()
+                    ->toggleable(),
             ])
             ->filters([
                 //
