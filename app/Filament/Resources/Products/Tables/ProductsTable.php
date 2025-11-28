@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -54,6 +55,10 @@ class ProductsTable
                     ->label('دسته بندی')
                     ->sortable()
                     ->searchable()
+                    ->toggleable(),
+                ColorColumn::make('category.color')
+                    ->label('رنگ دسته بندی')
+                    ->sortable()
                     ->toggleable(),
                 IconColumn::make('is_active')
                     ->label('وضعیت')
