@@ -30,7 +30,6 @@ return new class extends Migration
             $table->index(['is_active']);
             $table->boolean('is_3d')->default(false);
             $table->timestamps();
-
         });
     }
 

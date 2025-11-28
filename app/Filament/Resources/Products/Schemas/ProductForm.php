@@ -38,17 +38,20 @@ class ProductForm
                     ->label('تعداد لایک')
                     ->required()
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->readOnly(),
                 TextInput::make('views')
                     ->label('تعداد بازدید')
                     ->required()
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->readOnly(),
                 TextInput::make('purchased')
                     ->label('تعداد خریداری شده')
                     ->required()
                     ->numeric()
-                    ->default(0),
+                    ->default(0)
+                    ->readOnly(),
                 Select::make('category_id')
                     ->label('دسته بندی')
                     ->required()

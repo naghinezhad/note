@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\belongsToMany;
 
 class Product extends Model
 {
@@ -24,16 +26,31 @@ class Product extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
-        'is_active' => 'boolean',
-        'is_3d' => 'boolean',
+        'price' => 'integer',
         'likes' => 'integer',
         'views' => 'integer',
         'purchased' => 'integer',
+        'is_active' => 'boolean',
+        'is_3d' => 'boolean',
     ];
 
-    public function category()
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function likedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'product_user_likes');
+    }
+
+    public function viewedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'product_user_views');
+    }
+
+    public function purchasedUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'product_user_purchased');
     }
 }

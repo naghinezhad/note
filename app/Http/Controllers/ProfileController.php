@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -46,7 +47,7 @@ class ProfileController extends Controller
      *     )
      * )
      */
-    public function profile(Request $request)
+    public function profile(Request $request): JsonResponse
     {
         return response()->json([
             'message' => 'اطلاعات کاربر با موفقیت دریافت شد.',
