@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,20 +19,21 @@ class CategoriesTable
                 TextColumn::make('name')
                     ->label('نام')
                     ->searchable(),
+                ColorColumn::make('color')
+                    ->label('رنگ')
+                    ->sortable(),
                 TextColumn::make('description')
                     ->label('توضیحات'),
                 TextColumn::make('created_at')
                     ->label('تاریخ ایجاد')
                     ->dateTime()
                     ->jalaliDateTime()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->label('تاریخ بروزرسانی')
                     ->dateTime()
                     ->jalaliDateTime()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
             ])
             ->filters([
                 //

@@ -30,14 +30,12 @@ class OtpsTable
                     ->label('تاریخ ایجاد')
                     ->dateTime()
                     ->jalaliDateTime()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
                 TextColumn::make('updated_at')
                     ->label('تاریخ بروزرسانی')
                     ->dateTime()
                     ->jalaliDateTime()
-                    ->sortable()
-                    ->toggleable(),
+                    ->sortable(),
             ])
             ->filters([
                 //

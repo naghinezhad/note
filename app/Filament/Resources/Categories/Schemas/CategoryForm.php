@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Schemas;
 
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -14,6 +15,9 @@ class CategoryForm
             ->components([
                 TextInput::make('name')
                     ->label('نام')
+                    ->required(),
+                ColorPicker::make('color')
+                    ->label('رنگ')
                     ->required(),
                 Textarea::make('description')
                     ->label('توضیحات')
