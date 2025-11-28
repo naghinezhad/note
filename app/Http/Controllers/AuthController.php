@@ -924,30 +924,6 @@ class AuthController extends Controller
 
     private function sendOtp($email, $type)
     {
-        $maxRequests = 3;
-        $timeLimitHours = 3;
-
-        $windowStart = Carbon::now()->subHours($timeLimitHours);
-
-        $recentOtps = Otp::where('email', $email)
-            ->where('created_at', '>=', $windowStart)
-            ->orderBy('created_at', 'asc')
-            ->get();
-
-        if ($recentOtps->count() >= $maxRequests) {
-            $oldestOtp = $recentOtps->first();
-            $nextAllowedTime = Carbon::parse($oldestOtp->created_at)->addHours($timeLimitHours);
-
-            $remainingSeconds = now()->diffInSeconds($nextAllowedTime);
-
-            $hours = floor($remainingSeconds / 3600);
-            $minutes = ceil(($remainingSeconds % 3600) / 60);
-
-            return response()->json([
-                'message' => "شما به محدودیت ارسال کد رسیده‌اید. لطفاً {$hours} ساعت و {$minutes} دقیقه دیگر دوباره تلاش کنید.",
-            ], 429);
-        }
-
         $code = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
 
         $expiresAt = Carbon::now()->addMinutes(2);
