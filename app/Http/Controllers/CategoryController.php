@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class CategoryController extends Controller
 {
@@ -97,6 +98,110 @@ class CategoryController extends Controller
                 'from' => $categories->firstItem(),
                 'to' => $categories->lastItem(),
             ],
+        ]);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/categories/with-products",
+     *     summary="دریافت لیست دسته‌بندی‌ها همراه با محصولات",
+     *     description="دریافت لیست تمام دسته‌بندی‌ها همراه با 20 محصول اول هر دسته‌بندی (بدون صفحه‌بندی)",
+     *     tags={"Categories"},
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="دریافت موفق لیست دسته‌بندی‌ها همراه با محصولات",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *
+     *                 @OA\Items(
+     *                     type="object",
+     *
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="الکترونیک"),
+     *                     @OA\Property(property="color", type="string", example="#FF5733"),
+     *                     @OA\Property(
+     *                         property="products",
+     *                         type="array",
+     *
+     *                         @OA\Items(
+     *                             type="object",
+     *
+     *                             @OA\Property(property="id", type="integer", example=1),
+     *                             @OA\Property(property="name", type="string", example="لپ تاپ ایسوس"),
+     *                             @OA\Property(property="description", type="string", example="لپ تاپ گیمینگ با مشخصات بالا"),
+     *                             @OA\Property(property="price", type="number", format="float", example=15000000),
+     *                             @OA\Property(property="likes", type="integer", example=120),
+     *                             @OA\Property(property="purchased", type="integer", example=45),
+     *                             @OA\Property(property="views", type="integer", example=580),
+     *                             @OA\Property(property="is_active", type="boolean", example=true),
+     *                             @OA\Property(property="is_free", type="boolean", example=false),
+     *                             @OA\Property(property="is_purchased", type="boolean", example=false),
+     *                             @OA\Property(property="high_quality_image", type="string", example="https://example.com/signed-url"),
+     *                             @OA\Property(property="low_quality_image", type="string", example="https://example.com/signed-url")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="احراز هویت نشده",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     )
+     * )
+     */
+    public function categoriesWithProducts(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $categories = Category::select('id', 'name', 'color')
+            ->with(['products' => function ($query) {
+                $query->where('is_active', true)
+                    ->orderBy('created_at', 'desc')
+                    ->limit(20);
+            }])
+            ->get();
+
+        $categoriesData = $categories->map(function ($category) use ($user) {
+            $categoryArray = $category->toArray();
+
+            $categoryArray['products'] = $category->products->map(function ($product) use ($user) {
+                $productArray = $product->toArray();
+                $productArray['is_free'] = $product->price == 0;
+                $productArray['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
+
+                $productArray['high_quality_image'] = URL::temporarySignedRoute(
+                    'signed.file',
+                    now()->addYear(),
+                    ['path' => $product->high_quality_image]
+                );
+
+                $productArray['low_quality_image'] = URL::temporarySignedRoute(
+                    'signed.file',
+                    now()->addYear(),
+                    ['path' => $product->low_quality_image]
+                );
+
+                return $productArray;
+            })->toArray();
+
+            return $categoryArray;
+        });
+
+        return response()->json([
+            'data' => $categoriesData,
         ]);
     }
 

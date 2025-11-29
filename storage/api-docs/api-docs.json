@@ -1035,6 +1035,128 @@
                 ]
             }
         },
+        "/categories/with-products": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "دریافت لیست دسته‌بندی‌ها همراه با محصولات",
+                "description": "دریافت لیست تمام دسته‌بندی‌ها همراه با 20 محصول اول هر دسته‌بندی (بدون صفحه‌بندی)",
+                "operationId": "fd8ffbd761b87b10dcd01ed3ea0b9f6d",
+                "responses": {
+                    "200": {
+                        "description": "دریافت موفق لیست دسته‌بندی‌ها همراه با محصولات",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "الکترونیک"
+                                                    },
+                                                    "color": {
+                                                        "type": "string",
+                                                        "example": "#FF5733"
+                                                    },
+                                                    "products": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "لپ تاپ ایسوس"
+                                                                },
+                                                                "description": {
+                                                                    "type": "string",
+                                                                    "example": "لپ تاپ گیمینگ با مشخصات بالا"
+                                                                },
+                                                                "price": {
+                                                                    "type": "number",
+                                                                    "format": "float",
+                                                                    "example": 15000000
+                                                                },
+                                                                "likes": {
+                                                                    "type": "integer",
+                                                                    "example": 120
+                                                                },
+                                                                "purchased": {
+                                                                    "type": "integer",
+                                                                    "example": 45
+                                                                },
+                                                                "views": {
+                                                                    "type": "integer",
+                                                                    "example": 580
+                                                                },
+                                                                "is_active": {
+                                                                    "type": "boolean",
+                                                                    "example": true
+                                                                },
+                                                                "is_free": {
+                                                                    "type": "boolean",
+                                                                    "example": false
+                                                                },
+                                                                "is_purchased": {
+                                                                    "type": "boolean",
+                                                                    "example": false
+                                                                },
+                                                                "high_quality_image": {
+                                                                    "type": "string",
+                                                                    "example": "https://example.com/signed-url"
+                                                                },
+                                                                "low_quality_image": {
+                                                                    "type": "string",
+                                                                    "example": "https://example.com/signed-url"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "احراز هویت نشده",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Unauthenticated."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/categories/{id}": {
             "get": {
                 "tags": [
