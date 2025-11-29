@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\URL;
 
 class ProductController extends Controller
 {
@@ -178,6 +179,18 @@ class ProductController extends Controller
             $productArray = $product->toArray();
             $productArray['is_free'] = $product->price == 0;
             $productArray['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
+
+            $productArray['high_quality_image'] = URL::temporarySignedRoute(
+                'signed.file',
+                now()->addYear(),
+                ['path' => $product->high_quality_image]
+            );
+
+            $productArray['low_quality_image'] = URL::temporarySignedRoute(
+                'signed.file',
+                now()->addYear(),
+                ['path' => $product->low_quality_image]
+            );
 
             return $productArray;
         });
@@ -453,6 +466,18 @@ class ProductController extends Controller
         $productData = $product->toArray();
         $productData['is_free'] = $product->price == 0;
         $productData['is_purchased'] = $product->purchasedUsers()->where('user_id', $user->id)->exists();
+
+        $productArray['high_quality_image'] = URL::temporarySignedRoute(
+            'signed.file',
+            now()->addYear(),
+            ['path' => $product->high_quality_image]
+        );
+
+        $productArray['low_quality_image'] = URL::temporarySignedRoute(
+            'signed.file',
+            now()->addYear(),
+            ['path' => $product->low_quality_image]
+        );
 
         return response()->json([
             'data' => $productData,
