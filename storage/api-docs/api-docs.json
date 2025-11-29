@@ -1252,6 +1252,69 @@
                 ]
             }
         },
+        "/privacy-policies": {
+            "get": {
+                "tags": [
+                    "Privacy Policy"
+                ],
+                "summary": "دریافت لیست سیاست‌های حریم خصوصی",
+                "description": "دریافت لیست تمام سیاست‌های حریم خصوصی به ترتیب مرتب‌سازی شده",
+                "operationId": "ba45fc344dcbf0e75e26566c1018fc13",
+                "responses": {
+                    "200": {
+                        "description": "دریافت موفق لیست سیاست‌های حریم خصوصی",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "title": {
+                                                        "type": "string",
+                                                        "example": "جمع‌آوری اطلاعات"
+                                                    },
+                                                    "content": {
+                                                        "type": "string",
+                                                        "example": "ما اطلاعات شخصی شما را با رعایت کامل حریم خصوصی جمع‌آوری می‌کنیم"
+                                                    },
+                                                    "order": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-01-15T10:30:00.000000Z"
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2024-01-15T10:30:00.000000Z"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/products": {
             "get": {
                 "tags": [
@@ -2205,6 +2268,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Privacy Policy",
+            "description": "Privacy Policy"
         },
         {
             "name": "Products",
