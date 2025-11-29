@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\PrivacyPolicies\Schemas;
 
+use App\Models\PrivacyPolicy;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Schema;
@@ -22,9 +23,9 @@ class PrivacyPolicyForm
                     ->columnSpanFull(),
                 TextInput::make('order')
                     ->label('جایگاه')
-                    ->required()
                     ->numeric()
-                    ->default(0),
+                    ->default(fn () => PrivacyPolicy::max('order') + 1)
+                    ->required(),
             ]);
     }
 }
