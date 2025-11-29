@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -16,6 +17,8 @@ Route::post('/login-with-otp', [AuthController::class, 'loginWithOtp']);
 
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
 Route::post('/verify-forgot-password-otp', [AuthController::class, 'verifyForgotPasswordOtp']);
+
+Route::get('/privacy-policies', [PrivacyPolicyController::class, 'index']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
