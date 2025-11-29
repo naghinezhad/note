@@ -16,6 +16,11 @@ class CategoryForm
                 TextInput::make('name')
                     ->label('نام')
                     ->required(),
+                TextInput::make('order')
+                    ->label('جایگاه')
+                    ->numeric()
+                    ->default(fn () => PrivacyPolicy::max('order') + 1)
+                    ->required(),
                 ColorPicker::make('color')
                     ->label('رنگ')
                     ->required(),

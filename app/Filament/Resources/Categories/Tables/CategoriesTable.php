@@ -15,10 +15,16 @@ class CategoriesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->defaultSort('order', 'asc')
+            ->reorderable('order')
             ->columns([
                 TextColumn::make('name')
                     ->label('نام')
                     ->searchable(),
+                TextColumn::make('order')
+                    ->label('جایگاه')
+                    ->numeric()
+                    ->sortable(),
                 ColorColumn::make('color')
                     ->label('رنگ')
                     ->sortable(),

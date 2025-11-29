@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('color');
             $table->text('description')->nullable();
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }
