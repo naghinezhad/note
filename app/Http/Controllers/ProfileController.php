@@ -145,7 +145,7 @@ class ProfileController extends Controller
      *     )
      * )
      */
-    public function changePassword(Request $request)
+    public function changePassword(Request $request): JsonResponse
     {
         $messages = [
             'current_password.required' => 'لطفاً رمز عبور فعلی را وارد کنید.',

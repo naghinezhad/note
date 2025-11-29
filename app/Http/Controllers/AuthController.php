@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Otp;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -68,7 +69,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
         $messages = [
             'email.required' => 'لطفاً ایمیل خود را وارد کنید.',
@@ -161,7 +162,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function verifyOtp(Request $request)
+    public function verifyOtp(Request $request): JsonResponse
     {
         $messages = [
             'email.required' => 'لطفاً ایمیل را وارد کنید.',
@@ -268,7 +269,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function login(Request $request)
+    public function login(Request $request): JsonResponse
     {
         $messages = [
             'email.required' => 'لطفاً ایمیل را وارد کنید.',
@@ -365,7 +366,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function requestOtpLogin(Request $request)
+    public function requestOtpLogin(Request $request): JsonResponse
     {
         $messages = [
             'email.required' => 'لطفاً ایمیل را وارد کنید.',
@@ -461,7 +462,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function loginWithOtp(Request $request)
+    public function loginWithOtp(Request $request): JsonResponse
     {
         $messages = [
             'email.required' => 'لطفاً ایمیل را وارد کنید.',
@@ -560,7 +561,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         $token = $request->user()->currentAccessToken();
 
@@ -640,7 +641,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function forgotPassword(Request $request)
+    public function forgotPassword(Request $request): JsonResponse
     {
         $messages = [
             'email.required' => 'لطفاً ایمیل را وارد کنید.',
@@ -730,7 +731,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function verifyForgotPasswordOtp(Request $request)
+    public function verifyForgotPasswordOtp(Request $request): JsonResponse
     {
         $messages = [
             'email.required' => 'لطفاً ایمیل را وارد کنید.',
@@ -753,6 +754,14 @@ class AuthController extends Controller
             ], 422);
         }
 
+        $user = User::where('email', $request->email)->first();
+
+        if (! $user) {
+            return response()->json([
+                'message' => 'کاربری با این ایمیل یافت نشد.',
+            ], 400);
+        }
+
         $otp = Otp::where('email', $request->email)
             ->where('code', $request->code)
             ->where('expires_at', '>', Carbon::now())
@@ -761,14 +770,6 @@ class AuthController extends Controller
         if (! $otp) {
             return response()->json([
                 'message' => 'کد تأیید نامعتبر است یا منقضی شده است.',
-            ], 400);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if (! $user) {
-            return response()->json([
-                'message' => 'کاربری با این ایمیل یافت نشد.',
             ], 400);
         }
 
@@ -875,7 +876,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function resetPassword(Request $request)
+    public function resetPassword(Request $request): JsonResponse
     {
         $messages = [
             'new_password.required' => 'لطفاً رمز عبور جدید را وارد کنید.',
@@ -922,7 +923,8 @@ class AuthController extends Controller
         ]);
     }
 
-    private function sendOtp($email, $type)
+    // sendOtp
+    private function sendOtp($email, $subject)
     {
         $maxRequests = 3;
         $timeLimitHours = 3;
@@ -957,10 +959,6 @@ class AuthController extends Controller
             'code' => $code,
             'expires_at' => $expiresAt,
         ]);
-
-        $subject = ($type === 'ثبت‌نام')
-            ? 'کد تأیید ثبت‌نام'
-            : 'کد تأیید ورود';
 
         Mail::raw("Code OTP: $code", function ($message) use ($email, $subject) {
             $message->to($email)->subject($subject);

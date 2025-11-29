@@ -86,7 +86,7 @@ class CategoryController extends Controller
             $query->where('name', 'like', "%{$search}%");
         }
 
-        $categories = $query->select('id', 'name', 'color')->paginate(10);
+        $categories = $query->select('id', 'name', 'color', 'order')->orderBy('order')->paginate(10);
 
         return response()->json([
             'data' => $categories->items(),
@@ -166,12 +166,13 @@ class CategoryController extends Controller
     {
         $user = $request->user();
 
-        $categories = Category::select('id', 'name', 'color')
+        $categories = Category::select('id', 'name', 'color', 'order')
             ->with(['products' => function ($query) {
                 $query->where('is_active', true)
                     ->orderBy('created_at', 'desc')
                     ->limit(20);
             }])
+            ->orderBy('order')
             ->get();
 
         $categoriesData = $categories->map(function ($category) use ($user) {
