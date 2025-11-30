@@ -58,7 +58,9 @@ class User extends Authenticatable implements FilamentUser
 
     public function purchasedProducts(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'product_user_purchased');
+        return $this->belongsToMany(Product::class, 'product_user_purchased')
+            ->withTimestamps()
+            ->withPivot('purchased_at');
     }
 
     public function likedProducts(): BelongsToMany

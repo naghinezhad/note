@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->timestamp('purchased_at')->useCurrent();
             $table->timestamps();
 
             $table->unique(['user_id', 'product_id']);

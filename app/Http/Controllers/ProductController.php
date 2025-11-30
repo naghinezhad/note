@@ -282,7 +282,7 @@ class ProductController extends Controller
      *                     @OA\Property(
      *                         property="pivot",
      *                         type="object",
-     *                         @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-15T10:30:00.000000Z")
+     *                         @OA\Property(property="purchased_at", type="string", format="date-time", example="2024-01-15T10:30:00.000000Z")
      *                     ),
      *                     @OA\Property(
      *                         property="category",
@@ -360,7 +360,7 @@ class ProductController extends Controller
 
         $perPage = $request->get('per_page', 10);
         $products = $query->with('category')
-            ->withPivot('created_at')
+            ->withPivot('purchased_at')
             ->paginate($perPage);
 
         return response()->json([
@@ -511,13 +511,11 @@ class ProductController extends Controller
      *                 @OA\Schema(
      *
      *                     @OA\Property(property="message", type="string", example="محصول لایک شد"),
-     *                     @OA\Property(property="likes", type="integer", example=121)
      *                 ),
      *
      *                 @OA\Schema(
      *
      *                     @OA\Property(property="message", type="string", example="لایک برداشته شد"),
-     *                     @OA\Property(property="likes", type="integer", example=120)
      *                 )
      *             }
      *         )
@@ -563,7 +561,6 @@ class ProductController extends Controller
 
             return response()->json([
                 'message' => 'لایک برداشته شد',
-                'likes' => $product->likes,
             ]);
         }
 
@@ -572,7 +569,6 @@ class ProductController extends Controller
 
         return response()->json([
             'message' => 'محصول لایک شد',
-            'likes' => $product->likes,
         ]);
     }
 
@@ -600,7 +596,6 @@ class ProductController extends Controller
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="message", type="string", example="محصول با موفقیت خریداری شد"),
-     *             @OA\Property(property="purchased", type="integer", example=46)
      *         )
      *     ),
      *
@@ -654,12 +649,13 @@ class ProductController extends Controller
             ], 400);
         }
 
-        $product->purchasedUsers()->attach($user->id);
+        $product->purchasedUsers()->attach($user->id, [
+            'purchased_at' => now(),
+        ]);
         $product->increment('purchased');
 
         return response()->json([
             'message' => 'محصول با موفقیت خریداری شد',
-            'purchased' => $product->purchased,
         ]);
     }
 }

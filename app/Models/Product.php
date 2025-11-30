@@ -51,6 +51,8 @@ class Product extends Model
 
     public function purchasedUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'product_user_purchased');
+        return $this->belongsToMany(User::class, 'product_user_purchased')
+            ->withTimestamps()
+            ->withPivot('purchased_at');
     }
 }

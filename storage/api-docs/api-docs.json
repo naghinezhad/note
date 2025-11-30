@@ -1620,7 +1620,7 @@
                                                     },
                                                     "pivot": {
                                                         "properties": {
-                                                            "created_at": {
+                                                            "purchased_at": {
                                                                 "type": "string",
                                                                 "format": "date-time",
                                                                 "example": "2024-01-15T10:30:00.000000Z"
@@ -1880,10 +1880,6 @@
                                                 "message": {
                                                     "type": "string",
                                                     "example": "محصول لایک شد"
-                                                },
-                                                "likes": {
-                                                    "type": "integer",
-                                                    "example": 121
                                                 }
                                             },
                                             "type": "object"
@@ -1893,10 +1889,6 @@
                                                 "message": {
                                                     "type": "string",
                                                     "example": "لایک برداشته شد"
-                                                },
-                                                "likes": {
-                                                    "type": "integer",
-                                                    "example": 120
                                                 }
                                             },
                                             "type": "object"
@@ -1976,10 +1968,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "محصول با موفقیت خریداری شد"
-                                        },
-                                        "purchased": {
-                                            "type": "integer",
-                                            "example": 46
                                         }
                                     },
                                     "type": "object"
