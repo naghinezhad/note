@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 class CategoryController extends Controller
@@ -268,6 +269,25 @@ class CategoryController extends Controller
             ], 404);
         }
 
-        return response()->json($category);
+        $categoryArray = $category->toArray();
+
+        $stats = DB::table('products')
+            ->where('category_id', $category->id)
+            ->selectRaw('
+                COALESCE(SUM(likes), 0) as total_likes,
+                COALESCE(SUM(views), 0) as total_views,
+                COALESCE(SUM(purchased), 0) as total_purchased,
+                COALESCE(SUM(CASE WHEN is_3d = 1 THEN 1 ELSE 0 END), 0) as total_3d_products,
+                COALESCE(SUM(CASE WHEN price > 0 THEN 1 ELSE 0 END), 0) as total_paid_products
+            ')
+            ->first();
+
+        $categoryArray['total_likes'] = (int) $stats->total_likes;
+        $categoryArray['total_views'] = (int) $stats->total_views;
+        $categoryArray['total_purchased'] = (int) $stats->total_purchased;
+        $categoryArray['total_3d_products'] = (int) $stats->total_3d_products;
+        $categoryArray['total_paid_products'] = (int) $stats->total_paid_products;
+
+        return response()->json($categoryArray);
     }
 }
