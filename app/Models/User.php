@@ -60,7 +60,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->belongsToMany(Product::class, 'product_user_purchased')
             ->withTimestamps()
-            ->withPivot('purchased_at');
+            ->withPivot('purchased_at', 'purchase_price', 'tracking_code');
     }
 
     public function likedProducts(): BelongsToMany

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Categories\Schemas;
 
+use App\Models\Category;
 use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -19,7 +20,7 @@ class CategoryForm
                 TextInput::make('order')
                     ->label('جایگاه')
                     ->numeric()
-                    ->default(fn () => PrivacyPolicy::max('order') + 1)
+                    ->default(fn () => Category::max('order') + 1)
                     ->required(),
                 ColorPicker::make('color')
                     ->label('رنگ')

@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->decimal('purchase_price', 10, 2);
+            $table->string('tracking_code', 20)->unique();
             $table->timestamp('purchased_at')->useCurrent();
             $table->timestamps();
 

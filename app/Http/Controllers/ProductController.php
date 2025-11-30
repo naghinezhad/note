@@ -363,8 +363,28 @@ class ProductController extends Controller
             ->withPivot('purchased_at')
             ->paginate($perPage);
 
+        $productsData = $products->map(function ($product) use ($user) {
+            $productArray = $product->toArray();
+            $productArray['is_free'] = $product->price == 0;
+            $productArray['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
+
+            $productArray['high_quality_image'] = URL::temporarySignedRoute(
+                'signed.file',
+                now()->addYear(),
+                ['path' => $product->high_quality_image]
+            );
+
+            $productArray['low_quality_image'] = URL::temporarySignedRoute(
+                'signed.file',
+                now()->addYear(),
+                ['path' => $product->low_quality_image]
+            );
+
+            return $productArray;
+        });
+
         return response()->json([
-            'data' => $products->items(),
+            'data' => $productsData,
             'pagination' => [
                 'total' => $products->total(),
                 'per_page' => $products->perPage(),
@@ -649,13 +669,28 @@ class ProductController extends Controller
             ], 400);
         }
 
+        $trackingCode = $this->generateTrackingCode();
+
         $product->purchasedUsers()->attach($user->id, [
             'purchased_at' => now(),
+            'purchase_price' => $product->price,
+            'tracking_code' => $trackingCode,
         ]);
         $product->increment('purchased');
 
         return response()->json([
             'message' => 'محصول با موفقیت خریداری شد',
+            'tracking_code' => $trackingCode,
         ]);
+    }
+
+    // generateTrackingCode
+    private function generateTrackingCode(): string
+    {
+        do {
+            $trackingCode = 'NOTIN-TC-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -6));
+        } while (\DB::table('product_user_purchased')->where('tracking_code', $trackingCode)->exists());
+
+        return $trackingCode;
     }
 }
