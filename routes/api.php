@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
@@ -41,5 +42,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/', [CategoryController::class, 'index']);
         Route::get('/with-products', [CategoryController::class, 'categoriesWithProducts']);
         Route::get('/{id}', [CategoryController::class, 'show']);
+    });
+
+    Route::prefix('wallet')->group(function () {
+        Route::get('/', [WalletController::class, 'show']);
+        Route::get('/transactions', [WalletController::class, 'transactions']);
+        Route::post('/deposit', [WalletController::class, 'deposit']);
     });
 });

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 class ProductController extends Controller
@@ -661,6 +662,7 @@ class ProductController extends Controller
         }
 
         $user = $request->user();
+
         $hasPurchased = $product->purchasedUsers()->where('user_id', $user->id)->exists();
 
         if ($hasPurchased) {
@@ -669,14 +671,51 @@ class ProductController extends Controller
             ], 400);
         }
 
+        $wallet = $user->wallet;
+
+        if (! $wallet) {
+            return response()->json([
+                'message' => 'کیف پول یافت نشد',
+            ], 404);
+        }
+
+        if ($product->price == 0) {
+            $trackingCode = $this->generateTrackingCode();
+
+            $product->purchasedUsers()->attach($user->id, [
+                'purchased_at' => now(),
+                'purchase_price' => 0,
+                'tracking_code' => $trackingCode,
+            ]);
+            $product->increment('purchased');
+
+            return response()->json([
+                'message' => 'محصول رایگان با موفقیت دریافت شد',
+                'tracking_code' => $trackingCode,
+            ]);
+        }
+
+        if (! $wallet->hasBalance($product->price)) {
+            return response()->json([
+                'message' => 'موجودی کیف پول کافی نیست',
+            ], 400);
+        }
+
+        DB::beginTransaction();
+
         $trackingCode = $this->generateTrackingCode();
+
+        $wallet->purchaseProduct($product, $trackingCode);
 
         $product->purchasedUsers()->attach($user->id, [
             'purchased_at' => now(),
             'purchase_price' => $product->price,
             'tracking_code' => $trackingCode,
         ]);
+
         $product->increment('purchased');
+
+        DB::commit();
 
         return response()->json([
             'message' => 'محصول با موفقیت خریداری شد',
@@ -689,7 +728,7 @@ class ProductController extends Controller
     {
         do {
             $trackingCode = 'NOTIN-TC-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -6));
-        } while (\DB::table('product_user_purchased')->where('tracking_code', $trackingCode)->exists());
+        } while (DB::table('product_user_purchased')->where('tracking_code', $trackingCode)->exists());
 
         return $trackingCode;
     }
