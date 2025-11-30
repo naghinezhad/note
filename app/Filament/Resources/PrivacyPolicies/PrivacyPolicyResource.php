@@ -21,12 +21,12 @@ class PrivacyPolicyResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::HandRaised;
 
     protected static ?string $recordTitleAttribute = 'Privacy Policy';
- 
-    protected static ?string $navigationLabel = 'سیاست حفظ حریم خصوصی';
 
-    protected static ?string $pluralModelLabel = 'سیاست حفظ حریم خصوصی';
+    protected static ?string $navigationLabel = 'سیاست‌های حریم خصوصی';
 
-    protected static ?string $modelLabel = 'سیاست حفظ حریم خصوصی';
+    protected static ?string $pluralModelLabel = 'سیاست‌های حریم خصوصی';
+
+    protected static ?string $modelLabel = 'سیاست‌ حریم خصوصی';
 
     public static function getNavigationSort(): ?int
     {
