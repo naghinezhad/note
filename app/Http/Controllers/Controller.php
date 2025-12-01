@@ -6,10 +6,10 @@ namespace App\Http\Controllers;
  * @OA\Info(
  *     title="API Documentation",
  *     version="1.0.0",
- *     description="مستندات API سیستم",
+ *     description="",
  *
  *     @OA\Contact(
- *         email="support@example.com"
+ *         email=""
  *     )
  * )
  *
@@ -26,8 +26,8 @@ namespace App\Http\Controllers;
  *     securityScheme="bearerAuth",
  *     type="http",
  *     scheme="bearer",
- *     bearerFormat="JWT",
- *     description="وارد کردن توکن JWT برای احراز هویت"
+ *     bearerFormat="",
+ *     description=""
  * )
  */
 abstract class Controller

@@ -2,9 +2,9 @@
     "openapi": "3.0.0",
     "info": {
         "title": "API Documentation",
-        "description": "مستندات API سیستم",
+        "description": "",
         "contact": {
-            "email": "support@example.com"
+            "email": ""
         },
         "version": "1.0.0"
     },
@@ -2031,44 +2031,44 @@
                 "tags": [
                     "Profile"
                 ],
-                "summary": "دریافت اطلاعات پروفایل",
-                "description": "دریافت اطلاعات کاربر لاگین شده",
+                "summary": "",
+                "description": "",
                 "operationId": "0a13c4174f72b67dcc70cae0d32fdda9",
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق اطلاعات",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "اطلاعات کاربر با موفقیت دریافت شد."
-                                        },
                                         "user": {
                                             "properties": {
                                                 "id": {
                                                     "type": "integer",
                                                     "example": 1
                                                 },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
                                                 "email": {
                                                     "type": "string",
-                                                    "example": "user@example.com"
+                                                    "example": ""
                                                 },
                                                 "email_verified_at": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "example": "2024-01-15T10:30:00.000000Z"
+                                                    "example": ""
                                                 },
                                                 "created_at": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "example": "2024-01-01T08:00:00.000000Z"
+                                                    "example": ""
                                                 },
                                                 "updated_at": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "example": "2024-01-15T10:30:00.000000Z"
+                                                    "example": ""
                                                 }
                                             },
                                             "type": "object"
@@ -2080,7 +2080,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2108,8 +2108,6 @@
                 "tags": [
                     "Profile"
                 ],
-                "summary": "تغییر رمز عبور",
-                "description": "تغییر رمز عبور کاربر با استفاده از رمز عبور فعلی و رمز عبور جدید",
                 "operationId": "52fac76548a738f3226426e246180aef",
                 "requestBody": {
                     "required": true,
@@ -2118,21 +2116,21 @@
                             "schema": {
                                 "required": [
                                     "current_password",
-                                    "new_password"
+                                    "new_password",
+                                    "new_password_confirmation"
                                 ],
                                 "properties": {
                                     "current_password": {
-                                        "description": "رمز عبور فعلی کاربر",
                                         "type": "string",
-                                        "format": "password",
-                                        "example": "old123456"
+                                        "example": ""
                                     },
                                     "new_password": {
-                                        "description": "رمز عبور جدید (حداقل 6 کاراکتر)",
                                         "type": "string",
-                                        "format": "password",
-                                        "minLength": 6,
-                                        "example": "new123456"
+                                        "example": ""
+                                    },
+                                    "new_password_confirmation": {
+                                        "type": "string",
+                                        "example": ""
                                     }
                                 },
                                 "type": "object"
@@ -2141,40 +2139,8 @@
                     }
                 },
                 "responses": {
-                    "200": {
-                        "description": "تغییر رمز عبور موفق",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "رمز عبور کاربر با موفقیت تغییر کرد."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "رمز عبور فعلی اشتباه است",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "رمز عبور فعلی کاربر اشتباه است."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2182,41 +2148,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "خطای اعتبارسنجی",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "مشکل در احراز هویت کاربر."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "current_password": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The current password field is required."
-                                                    }
-                                                },
-                                                "new_password": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "The new password must be at least 6 characters."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -2731,8 +2662,8 @@
         "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
-                "description": "وارد کردن توکن JWT برای احراز هویت",
-                "bearerFormat": "JWT",
+                "description": "",
+                "bearerFormat": "",
                 "scheme": "bearer"
             }
         }
