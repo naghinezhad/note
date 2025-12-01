@@ -22,7 +22,8 @@ class ProductForm
                     ->label('قیمت')
                     ->required()
                     ->numeric()
-                    ->prefix('کوین'),
+                    ->prefix('کوین')
+                    ->default(0),
                 FileUpload::make('high_quality_image')
                     ->label('عکس با کیفیت')
                     ->image()
@@ -38,20 +39,17 @@ class ProductForm
                     ->label('تعداد لایک')
                     ->required()
                     ->numeric()
-                    ->default(0)
-                    ->readOnly(),
+                    ->default(0),
                 TextInput::make('views')
                     ->label('تعداد بازدید')
                     ->required()
                     ->numeric()
-                    ->default(0)
-                    ->readOnly(),
+                    ->default(0),
                 TextInput::make('purchased')
                     ->label('تعداد خریداری شده')
                     ->required()
                     ->numeric()
-                    ->default(0)
-                    ->readOnly(),
+                    ->default(0),
                 Select::make('category_id')
                     ->label('دسته بندی')
                     ->required()
