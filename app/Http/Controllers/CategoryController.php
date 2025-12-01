@@ -13,24 +13,24 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *     path="/categories",
-     *     summary="دریافت لیست دسته‌بندی‌ها",
-     *     description="دریافت لیست تمام دسته‌بندی‌ها با قابلیت جستجو و صفحه‌بندی",
+     *     summary="",
+     *     description="",
      *     tags={"Categories"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="جستجو در نام دسته‌بندی",
+     *         description="",
      *         required=false,
      *
-     *         @OA\Schema(type="string", example="برنامه نویسی")
+     *         @OA\Schema(type="string", example="")
      *     ),
      *
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
-     *         description="شماره صفحه",
+     *         description="",
      *         required=false,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -38,7 +38,7 @@ class CategoryController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="دریافت موفق لیست دسته‌بندی‌ها",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -50,26 +50,27 @@ class CategoryController extends Controller
      *                     type="object",
      *
      *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example="برنامه نویسی"),
-     *                     @OA\Property(property="color", type="string", example="#FF5733")
+     *                     @OA\Property(property="name", type="string", example=""),
+     *                     @OA\Property(property="color", type="string", example=""),
+     *                     @OA\Property(property="order", type="integer", example=1)
      *                 )
      *             ),
      *             @OA\Property(
      *                 property="pagination",
      *                 type="object",
-     *                 @OA\Property(property="total", type="integer", example=50),
-     *                 @OA\Property(property="per_page", type="integer", example=10),
+     *                 @OA\Property(property="total", type="integer", example=1),
+     *                 @OA\Property(property="per_page", type="integer", example=1),
      *                 @OA\Property(property="current_page", type="integer", example=1),
-     *                 @OA\Property(property="last_page", type="integer", example=5),
+     *                 @OA\Property(property="last_page", type="integer", example=1),
      *                 @OA\Property(property="from", type="integer", example=1),
-     *                 @OA\Property(property="to", type="integer", example=10)
+     *                 @OA\Property(property="to", type="integer", example=1)
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="احراز هویت نشده",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -80,14 +81,12 @@ class CategoryController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $query = Category::query();
-
-        if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where('name', 'like', "%{$search}%");
-        }
-
-        $categories = $query->select('id', 'name', 'color', 'order')->orderBy('order')->paginate(10);
+        $categories = Category::select('id', 'name', 'color', 'order')
+            ->when($request->filled('search'), function ($query) use ($request) {
+                $query->where('name', 'like', '%'.$request->input('search').'%');
+            })
+            ->orderBy('order')
+            ->paginate(10);
 
         return response()->json([
             'data' => $categories->items(),
@@ -105,14 +104,14 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *     path="/categories/with-products",
-     *     summary="دریافت لیست دسته‌بندی‌ها همراه با محصولات",
-     *     description="دریافت لیست تمام دسته‌بندی‌ها همراه با 20 محصول اول هر دسته‌بندی (بدون صفحه‌بندی)",
+     *     summary="",
+     *     description="",
      *     tags={"Categories"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Response(
      *         response=200,
-     *         description="دریافت موفق لیست دسته‌بندی‌ها همراه با محصولات",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -124,8 +123,9 @@ class CategoryController extends Controller
      *                     type="object",
      *
      *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example="الکترونیک"),
-     *                     @OA\Property(property="color", type="string", example="#FF5733"),
+     *                     @OA\Property(property="name", type="string", example=""),
+     *                     @OA\Property(property="color", type="string", example=""),
+     *                     @OA\Property(property="order", type="integer", example=1),
      *                     @OA\Property(
      *                         property="products",
      *                         type="array",
@@ -134,17 +134,21 @@ class CategoryController extends Controller
      *                             type="object",
      *
      *                             @OA\Property(property="id", type="integer", example=1),
-     *                             @OA\Property(property="name", type="string", example="لپ تاپ ایسوس"),
-     *                             @OA\Property(property="description", type="string", example="لپ تاپ گیمینگ با مشخصات بالا"),
-     *                             @OA\Property(property="price", type="number", format="float", example=15000000),
-     *                             @OA\Property(property="likes", type="integer", example=120),
-     *                             @OA\Property(property="purchased", type="integer", example=45),
-     *                             @OA\Property(property="views", type="integer", example=580),
+     *                             @OA\Property(property="name", type="string", example=""),
+     *                             @OA\Property(property="high_quality_image", type="string", example=""),
+     *                             @OA\Property(property="low_quality_image", type="string", example=""),
+     *                             @OA\Property(property="price", type="number", format="float", example=1),
+     *                             @OA\Property(property="description", type="string", example=""),
+     *                             @OA\Property(property="likes", type="integer", example=1),
+     *                             @OA\Property(property="views", type="integer", example=1),
+     *                             @OA\Property(property="purchased", type="integer", example=1),
+     *                             @OA\Property(property="category_id", type="integer", example=1),
      *                             @OA\Property(property="is_active", type="boolean", example=true),
-     *                             @OA\Property(property="is_free", type="boolean", example=false),
-     *                             @OA\Property(property="is_purchased", type="boolean", example=false),
-     *                             @OA\Property(property="high_quality_image", type="string", example="https://example.com/signed-url"),
-     *                             @OA\Property(property="low_quality_image", type="string", example="https://example.com/signed-url")
+     *                             @OA\Property(property="is_3d", type="boolean", example=true),
+     *                             @OA\Property(property="created_at", type="string", format="date-time", example=""),
+     *                             @OA\Property(property="updated_at", type="string", format="date-time", example=""),
+     *                             @OA\Property(property="is_free", type="boolean", example=true),
+     *                             @OA\Property(property="is_purchased", type="boolean", example=true),
      *                         )
      *                     )
      *                 )
@@ -154,7 +158,7 @@ class CategoryController extends Controller
      *
      *     @OA\Response(
      *         response=401,
-     *         description="احراز هویت نشده",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -210,15 +214,15 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *     path="/categories/{id}",
-     *     summary="دریافت اطلاعات یک دسته‌بندی",
-     *     description="دریافت اطلاعات کامل یک دسته‌بندی بر اساس شناسه",
+     *     summary="",
+     *     description="",
      *     tags={"Categories"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="شناسه دسته‌بندی",
+     *         description="",
      *         required=true,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -226,31 +230,38 @@ class CategoryController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="دریافت موفق اطلاعات دسته‌بندی",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="id", type="integer", example=1),
-     *             @OA\Property(property="name", type="string", example="برنامه نویسی"),
-     *             @OA\Property(property="color", type="string", example="#FF5733"),
-     *             @OA\Property(property="created_at", type="string", format="date-time", example="2024-01-01T08:00:00.000000Z"),
-     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2024-01-15T10:30:00.000000Z")
+     *             @OA\Property(property="name", type="string", example=""),
+     *             @OA\Property(property="color", type="string", example=""),
+     *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="order", type="integer", example=1),
+     *             @OA\Property(property="created_at", type="string", format="date-time", example=""),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example=""),
+     *             @OA\Property(property="total_likes", type="integer", example=1),
+     *             @OA\Property(property="total_views", type="integer", example=1),
+     *             @OA\Property(property="total_purchased", type="integer", example=1),
+     *             @OA\Property(property="total_3d_products", type="integer", example=1),
+     *             @OA\Property(property="total_paid_products", type="integer", example=1)
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=404,
-     *         description="دسته‌بندی یافت نشد",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="دسته بندی یافت نشد")
+     *             @OA\Property(property="message", type="string", example="")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="احراز هویت نشده",
+     *         description="",
      *
      *         @OA\JsonContent(
      *

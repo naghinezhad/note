@@ -57,23 +57,6 @@ class User extends Authenticatable implements FilamentUser
         return $this->is_admin === 1;
     }
 
-    public function purchasedProducts(): BelongsToMany
-    {
-        return $this->belongsToMany(Product::class, 'product_user_purchased')
-            ->withTimestamps()
-            ->withPivot('purchased_at', 'purchase_price', 'tracking_code');
-    }
-
-    public function likedProducts(): BelongsToMany
-    {
-        return $this->belongsToMany(Product::class, 'product_user_likes');
-    }
-
-    public function viewedProducts(): BelongsToMany
-    {
-        return $this->belongsToMany(Product::class, 'product_user_views');
-    }
-
     public function wallet(): HasOne
     {
         return $this->hasOne(Wallet::class);
@@ -86,5 +69,22 @@ class User extends Authenticatable implements FilamentUser
         static::created(function ($user) {
             $user->wallet()->create(['balance' => 100]);
         });
+    }
+
+    public function likedProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_user_likes');
+    }
+
+    public function viewedProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_user_views');
+    }
+
+    public function purchasedProducts(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_user_purchased')
+            ->withTimestamps()
+            ->withPivot('purchased_at', 'purchase_price', 'tracking_code');
     }
 }

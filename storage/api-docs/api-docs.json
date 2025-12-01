@@ -924,24 +924,24 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "دریافت لیست دسته‌بندی‌ها",
-                "description": "دریافت لیست تمام دسته‌بندی‌ها با قابلیت جستجو و صفحه‌بندی",
+                "summary": "",
+                "description": "",
                 "operationId": "ead5fb1cf2a7453acb2e37928a1b1eaf",
                 "parameters": [
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "جستجو در نام دسته‌بندی",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "example": "برنامه نویسی"
+                            "example": ""
                         }
                     },
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "شماره صفحه",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -951,7 +951,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق لیست دسته‌بندی‌ها",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -966,11 +966,15 @@
                                                     },
                                                     "name": {
                                                         "type": "string",
-                                                        "example": "برنامه نویسی"
+                                                        "example": ""
                                                     },
                                                     "color": {
                                                         "type": "string",
-                                                        "example": "#FF5733"
+                                                        "example": ""
+                                                    },
+                                                    "order": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     }
                                                 },
                                                 "type": "object"
@@ -980,11 +984,11 @@
                                             "properties": {
                                                 "total": {
                                                     "type": "integer",
-                                                    "example": 50
+                                                    "example": 1
                                                 },
                                                 "per_page": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 },
                                                 "current_page": {
                                                     "type": "integer",
@@ -992,7 +996,7 @@
                                                 },
                                                 "last_page": {
                                                     "type": "integer",
-                                                    "example": 5
+                                                    "example": 1
                                                 },
                                                 "from": {
                                                     "type": "integer",
@@ -1000,7 +1004,7 @@
                                                 },
                                                 "to": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 }
                                             },
                                             "type": "object"
@@ -1012,7 +1016,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1040,12 +1044,12 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "دریافت لیست دسته‌بندی‌ها همراه با محصولات",
-                "description": "دریافت لیست تمام دسته‌بندی‌ها همراه با 20 محصول اول هر دسته‌بندی (بدون صفحه‌بندی)",
+                "summary": "",
+                "description": "",
                 "operationId": "fd8ffbd761b87b10dcd01ed3ea0b9f6d",
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق لیست دسته‌بندی‌ها همراه با محصولات",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1060,11 +1064,15 @@
                                                     },
                                                     "name": {
                                                         "type": "string",
-                                                        "example": "الکترونیک"
+                                                        "example": ""
                                                     },
                                                     "color": {
                                                         "type": "string",
-                                                        "example": "#FF5733"
+                                                        "example": ""
+                                                    },
+                                                    "order": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "products": {
                                                         "type": "array",
@@ -1076,48 +1084,66 @@
                                                                 },
                                                                 "name": {
                                                                     "type": "string",
-                                                                    "example": "لپ تاپ ایسوس"
+                                                                    "example": ""
                                                                 },
-                                                                "description": {
+                                                                "high_quality_image": {
                                                                     "type": "string",
-                                                                    "example": "لپ تاپ گیمینگ با مشخصات بالا"
+                                                                    "example": ""
+                                                                },
+                                                                "low_quality_image": {
+                                                                    "type": "string",
+                                                                    "example": ""
                                                                 },
                                                                 "price": {
                                                                     "type": "number",
                                                                     "format": "float",
-                                                                    "example": 15000000
+                                                                    "example": 1
+                                                                },
+                                                                "description": {
+                                                                    "type": "string",
+                                                                    "example": ""
                                                                 },
                                                                 "likes": {
                                                                     "type": "integer",
-                                                                    "example": 120
-                                                                },
-                                                                "purchased": {
-                                                                    "type": "integer",
-                                                                    "example": 45
+                                                                    "example": 1
                                                                 },
                                                                 "views": {
                                                                     "type": "integer",
-                                                                    "example": 580
+                                                                    "example": 1
+                                                                },
+                                                                "purchased": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "category_id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
                                                                 },
                                                                 "is_active": {
                                                                     "type": "boolean",
                                                                     "example": true
                                                                 },
+                                                                "is_3d": {
+                                                                    "type": "boolean",
+                                                                    "example": true
+                                                                },
+                                                                "created_at": {
+                                                                    "type": "string",
+                                                                    "format": "date-time",
+                                                                    "example": ""
+                                                                },
+                                                                "updated_at": {
+                                                                    "type": "string",
+                                                                    "format": "date-time",
+                                                                    "example": ""
+                                                                },
                                                                 "is_free": {
                                                                     "type": "boolean",
-                                                                    "example": false
+                                                                    "example": true
                                                                 },
                                                                 "is_purchased": {
                                                                     "type": "boolean",
-                                                                    "example": false
-                                                                },
-                                                                "high_quality_image": {
-                                                                    "type": "string",
-                                                                    "example": "https://example.com/signed-url"
-                                                                },
-                                                                "low_quality_image": {
-                                                                    "type": "string",
-                                                                    "example": "https://example.com/signed-url"
+                                                                    "example": true
                                                                 }
                                                             },
                                                             "type": "object"
@@ -1134,7 +1160,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1162,14 +1188,14 @@
                 "tags": [
                     "Categories"
                 ],
-                "summary": "دریافت اطلاعات یک دسته‌بندی",
-                "description": "دریافت اطلاعات کامل یک دسته‌بندی بر اساس شناسه",
+                "summary": "",
+                "description": "",
                 "operationId": "4cdf41756315109f1efc72787db5830a",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "شناسه دسته‌بندی",
+                        "description": "",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1179,7 +1205,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق اطلاعات دسته‌بندی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1190,21 +1216,49 @@
                                         },
                                         "name": {
                                             "type": "string",
-                                            "example": "برنامه نویسی"
+                                            "example": ""
                                         },
                                         "color": {
                                             "type": "string",
-                                            "example": "#FF5733"
+                                            "example": ""
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "order": {
+                                            "type": "integer",
+                                            "example": 1
                                         },
                                         "created_at": {
                                             "type": "string",
                                             "format": "date-time",
-                                            "example": "2024-01-01T08:00:00.000000Z"
+                                            "example": ""
                                         },
                                         "updated_at": {
                                             "type": "string",
                                             "format": "date-time",
-                                            "example": "2024-01-15T10:30:00.000000Z"
+                                            "example": ""
+                                        },
+                                        "total_likes": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "total_views": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "total_purchased": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "total_3d_products": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "total_paid_products": {
+                                            "type": "integer",
+                                            "example": 1
                                         }
                                     },
                                     "type": "object"
@@ -1213,14 +1267,14 @@
                         }
                     },
                     "404": {
-                        "description": "دسته‌بندی یافت نشد",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "دسته بندی یافت نشد"
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -1229,7 +1283,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
