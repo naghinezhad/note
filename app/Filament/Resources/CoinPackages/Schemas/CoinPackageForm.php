@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\CoinPackages\Schemas;
 
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
@@ -15,6 +17,12 @@ class CoinPackageForm
                 TextInput::make('name')
                     ->label('نام پکیج')
                     ->required(),
+                RichEditor::make('description')
+                    ->label('توضیحات')
+                    ->columnSpanFull(),
+                FileUpload::make('image')
+                    ->label('عکس')
+                    ->image(),
                 TextInput::make('coins')
                     ->label('تعداد کوین')
                     ->required()

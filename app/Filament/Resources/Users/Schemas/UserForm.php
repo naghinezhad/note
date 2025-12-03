@@ -20,6 +20,8 @@ class UserForm
                     ->email()
                     ->required()
                     ->unique(User::class, 'email', ignoreRecord: true),
+                TextInput::make('wallet.coins')
+                    ->label('کیف پول'),
                 DateTimePicker::make('email_verified_at')
                     ->label('تاریخ تأیید ایمیل')->jalali(weekdaysShort: true),
                 TextInput::make('password')

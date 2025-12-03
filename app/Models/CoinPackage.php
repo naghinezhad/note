@@ -11,6 +11,8 @@ class CoinPackage extends Model
 
     protected $fillable = [
         'name',
+        'description',
+        'image',
         'coins',
         'price',
         'discount_percentage',

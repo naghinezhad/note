@@ -1346,11 +1346,15 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "wallet_id": {
-                                                    "type": "integer",
-                                                    "example": 1
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": ""
                                                 },
-                                                "type": {
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "image": {
                                                     "type": "string",
                                                     "example": ""
                                                 },
@@ -1358,29 +1362,17 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "coins_before": {
+                                                "price": {
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "coins_after": {
+                                                "discount_percentage": {
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "paid_amount": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "example": ""
-                                                },
-                                                "coin_package_id": {
-                                                    "type": "integer",
-                                                    "example": 1
-                                                },
-                                                "reference_code": {
-                                                    "type": "string",
-                                                    "example": ""
+                                                "is_active": {
+                                                    "type": "boolean",
+                                                    "example": true
                                                 },
                                                 "created_at": {
                                                     "type": "string",
@@ -1391,6 +1383,14 @@
                                                     "type": "string",
                                                     "format": "date-time",
                                                     "example": ""
+                                                },
+                                                "final_price": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "discount_amount": {
+                                                    "type": "integer",
+                                                    "example": 1
                                                 }
                                             },
                                             "type": "object"

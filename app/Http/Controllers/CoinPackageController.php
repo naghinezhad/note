@@ -6,6 +6,7 @@ use App\Models\CoinPackage;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 
 class CoinPackageController extends Controller
@@ -38,17 +39,17 @@ class CoinPackageController extends Controller
      *                 property="transaction",
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="wallet_id", type="integer", example=1),
-     *                 @OA\Property(property="type", type="string", example=""),
-     *                 @OA\Property(property="coins", type="integer", example=1),
-     *                 @OA\Property(property="coins_before", type="integer", example=1),
-     *                 @OA\Property(property="coins_after", type="integer", example=1),
-     *                 @OA\Property(property="paid_amount", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example=""),
      *                 @OA\Property(property="description", type="string", example=""),
-     *                 @OA\Property(property="coin_package_id", type="integer", example=1),
-     *                 @OA\Property(property="reference_code", type="string", example=""),
+     *                 @OA\Property(property="image", type="string", example=""),
+     *                 @OA\Property(property="coins", type="integer", example=1),
+     *                 @OA\Property(property="price", type="integer", example=1),
+     *                 @OA\Property(property="discount_percentage", type="integer", example=1),
+     *                 @OA\Property(property="is_active", type="boolean", example=true),
      *                 @OA\Property(property="created_at", type="string", format="date-time", example=""),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="")
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example=""),
+     *                 @OA\Property(property="final_price", type="integer", example=1),
+     *                 @OA\Property(property="discount_amount", type="integer", example=1)
      *             )
      *         )
      *     )
@@ -67,8 +68,20 @@ class CoinPackageController extends Controller
 
         $packages = $query->orderBy('price', 'asc')->get();
 
+        $packagesData = $packages->map(function ($package) {
+            $packageArray = $package->toArray();
+
+            $packageArray['image'] = URL::temporarySignedRoute(
+                'signed.file',
+                now()->addMinute(),
+                ['path' => $package->image]
+            );
+
+            return $packageArray;
+        });
+
         return response()->json([
-            'data' => $packages,
+            'data' => $packagesData,
         ]);
     }
 

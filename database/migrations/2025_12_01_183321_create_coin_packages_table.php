@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('coin_packages', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
             $table->unsignedBigInteger('coins');
             $table->unsignedBigInteger('price');
             $table->unsignedTinyInteger('discount_percentage')->default(0);

@@ -22,6 +22,8 @@ class UsersTable
                 TextColumn::make('email')
                     ->label('ایمیل')
                     ->searchable(),
+                TextColumn::make('wallet.coins')
+                    ->label('کیف پول'),
                 TextColumn::make('is_admin')
                     ->label('نقش')
                     ->formatStateUsing(fn ($state) => $state ? 'ادمین' : 'کاربر عادی')

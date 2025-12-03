@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -18,6 +19,11 @@ class CoinPackagesTable
                 TextColumn::make('name')
                     ->label('نام پکیج')
                     ->searchable(),
+                TextColumn::make('description')
+                    ->label('توضیحات')
+                    ->html(),
+                ImageColumn::make('image')
+                    ->label('عکس'),
                 TextColumn::make('coins')
                     ->label('تعداد کوین')
                     ->numeric()
