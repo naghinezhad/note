@@ -97,11 +97,11 @@ class CoinPackageController extends Controller
      *         required=true,
      *
      *         @OA\JsonContent(
-     *             required={"coin_package_id", "paid_amount", "reference_code"},
+     *             required={"coin_package_id", "paid_amount", "pay_reference_code"},
      *
      *             @OA\Property(property="coin_package_id", type="integer", example=1, description="ID of the coin package to purchase"),
      *             @OA\Property(property="paid_amount", type="integer", example=100, description="Amount paid for the package"),
-     *             @OA\Property(property="reference_code", type="string", example="abc123", description="Payment reference code")
+     *             @OA\Property(property="pay_reference_code", type="string", example="abc123", description="Payment reference code")
      *         )
      *     ),
      *
@@ -206,7 +206,7 @@ class CoinPackageController extends Controller
             $transaction = $wallet->purchasePackage(
                 $package,
                 $request->paid_amount,
-                $request->referenceCode
+                $referenceCode
             );
 
             DB::commit();

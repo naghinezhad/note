@@ -1425,7 +1425,7 @@
                                 "required": [
                                     "coin_package_id",
                                     "paid_amount",
-                                    "reference_code"
+                                    "pay_reference_code"
                                 ],
                                 "properties": {
                                     "coin_package_id": {
@@ -1438,7 +1438,7 @@
                                         "type": "integer",
                                         "example": 100
                                     },
-                                    "reference_code": {
+                                    "pay_reference_code": {
                                         "description": "Payment reference code",
                                         "type": "string",
                                         "example": "abc123"
