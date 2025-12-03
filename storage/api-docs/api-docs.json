@@ -24,8 +24,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "ثبت‌نام کاربر جدید",
-                "description": "ثبت‌نام کاربر با ایمیل و رمز عبور و ارسال کد",
+                "summary": "",
+                "description": "",
                 "operationId": "0903f2e0df1a8857bee538fc055417f0",
                 "requestBody": {
                     "required": true,
@@ -38,13 +38,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "ایمیل کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "email",
                                         "example": "user@example.com"
                                     },
                                     "password": {
-                                        "description": "رمز عبور (حداقل 6 کاراکتر)",
+                                        "description": "",
                                         "type": "string",
                                         "format": "password",
                                         "minLength": 6,
@@ -58,14 +58,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "ثبت‌نام موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "ثبت‌نام کاربر با موفقیت انجام شد. کد تأیید برای شما ارسال شد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -74,14 +74,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در ثبت‌نام کاربر."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "properties": {
@@ -89,14 +89,14 @@
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The email has already been taken."
+                                                        "example": ""
                                                     }
                                                 },
                                                 "password": {
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The password must be at least 6 characters."
+                                                        "example": ""
                                                     }
                                                 }
                                             },
@@ -116,8 +116,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "تأیید کد",
-                "description": "تأیید ایمیل کاربر با استفاده از کد و دریافت توکن احراز هویت",
+                "summary": "",
+                "description": "",
                 "operationId": "d65b6acd2e89eea00122acca415fbc86",
                 "requestBody": {
                     "required": true,
@@ -130,13 +130,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "ایمیل کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "email",
                                         "example": "user@example.com"
                                     },
                                     "code": {
-                                        "description": "کد 6 رقمی OTP",
+                                        "description": "",
                                         "type": "string",
                                         "example": "123456"
                                     }
@@ -148,14 +148,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "تأیید موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "ثبت‌نام کاربر با موفقیت انجام شد."
+                                            "example": ""
                                         },
                                         "user": {
                                             "properties": {
@@ -176,7 +176,7 @@
                                         },
                                         "token": {
                                             "type": "string",
-                                            "example": "1|randomtokenstring..."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -185,14 +185,14 @@
                         }
                     },
                     "400": {
-                        "description": "کد نامعتبر یا منقضی شده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کد تأیید نامعتبر است."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -201,14 +201,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در احراز هویت کاربر."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "type": "object"
@@ -227,8 +227,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "ورود با رمز عبور",
-                "description": "ورود کاربر با استفاده از ایمیل و رمز عبور",
+                "summary": "",
+                "description": "",
                 "operationId": "2dd578ff7aba2721293dac66833b27d1",
                 "requestBody": {
                     "required": true,
@@ -241,13 +241,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "ایمیل کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "email",
                                         "example": "user@example.com"
                                     },
                                     "password": {
-                                        "description": "رمز عبور کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "password",
                                         "example": "123456"
@@ -260,14 +260,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "ورود موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "ورود کاربر با موفقیت انجام شد."
+                                            "example": ""
                                         },
                                         "user": {
                                             "properties": {
@@ -284,7 +284,7 @@
                                         },
                                         "token": {
                                             "type": "string",
-                                            "example": "1|randomtokenstring..."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -293,14 +293,14 @@
                         }
                     },
                     "401": {
-                        "description": "اطلاعات ورود نادرست یا کاربر احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "پسورد وارد شده اشتباه است."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -309,14 +309,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در ورود کاربر."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "type": "object"
@@ -335,8 +335,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "درخواست کد برای ورود",
-                "description": "ارسال کد به ایمیل کاربر برای ورود بدون رمز عبور",
+                "summary": "",
+                "description": "",
                 "operationId": "6d4e956fe2312353f5f1883a7574ec5c",
                 "requestBody": {
                     "required": true,
@@ -348,7 +348,7 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "ایمیل کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "email",
                                         "example": "user@example.com"
@@ -361,14 +361,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "کد ارسال شد",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کد ورود برای شما ارسال شد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -377,14 +377,14 @@
                         }
                     },
                     "400": {
-                        "description": "کاربر یافت نشد",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کاربر مورد نظر یافت نشد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -393,14 +393,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در ورود کاربر."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "type": "object"
@@ -419,8 +419,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "ورود با کد",
-                "description": "ورود کاربر با استفاده از کد",
+                "summary": "",
+                "description": "",
                 "operationId": "32c0805bcc3bc6681384042bee395cd8",
                 "requestBody": {
                     "required": true,
@@ -433,13 +433,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "ایمیل کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "email",
                                         "example": "user@example.com"
                                     },
                                     "code": {
-                                        "description": "کد 6 رقمی OTP",
+                                        "description": "",
                                         "type": "string",
                                         "example": "123456"
                                     }
@@ -451,14 +451,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "ورود موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "ورود کاربر با موفقیت انجام شد."
+                                            "example": ""
                                         },
                                         "user": {
                                             "properties": {
@@ -475,7 +475,7 @@
                                         },
                                         "token": {
                                             "type": "string",
-                                            "example": "1|randomtokenstring..."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -484,14 +484,14 @@
                         }
                     },
                     "400": {
-                        "description": "کد نامعتبر یا منقضی شده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کد تأیید نامعتبر است."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -500,14 +500,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در ورود کاربر."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "type": "object"
@@ -526,19 +526,19 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "خروج از حساب کاربری",
-                "description": "خروج کاربر و حذف توکن فعلی",
+                "summary": "",
+                "description": "",
                 "operationId": "68a6108af04af5e3bc1ea68a6c6f1299",
                 "responses": {
                     "200": {
-                        "description": "خروج موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "خروج از حساب با موفقیت انجام شد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -547,14 +547,14 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -563,14 +563,14 @@
                         }
                     },
                     "500": {
-                        "description": "خطای سرور",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "خطایی در خروج رخ داد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -591,8 +591,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "درخواست کد برای فراموشی رمز عبور",
-                "description": "ارسال کد تأیید به ایمیل کاربر برای بازیابی رمز عبور",
+                "summary": "",
+                "description": "",
                 "operationId": "da27e3923ff357f8610f31cf2cb83224",
                 "requestBody": {
                     "required": true,
@@ -604,7 +604,7 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "ایمیل کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "email",
                                         "example": "user@example.com"
@@ -617,14 +617,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "کد ارسال شد",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کد بازیابی رمز عبور برای شما ارسال شد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -633,14 +633,14 @@
                         }
                     },
                     "400": {
-                        "description": "کاربر یافت نشد",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کاربری با این ایمیل یافت نشد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -649,14 +649,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در درخواست بازیابی رمز عبور."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "type": "object"
@@ -668,14 +668,14 @@
                         }
                     },
                     "429": {
-                        "description": "محدودیت تعداد درخواست",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "شما به محدودیت ارسال کد رسیده‌اید."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -691,8 +691,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "تأیید کد فراموشی رمز عبور",
-                "description": "بررسی اعتبار کد ارسال شده برای فراموشی رمز عبور",
+                "summary": "",
+                "description": "",
                 "operationId": "94d2afe6eb9504c179632cb75a521533",
                 "requestBody": {
                     "required": true,
@@ -705,13 +705,13 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "description": "ایمیل کاربر",
+                                        "description": "",
                                         "type": "string",
                                         "format": "email",
                                         "example": "user@example.com"
                                     },
                                     "code": {
-                                        "description": "کد 4 رقمی OTP",
+                                        "description": "",
                                         "type": "string",
                                         "example": "1234"
                                     }
@@ -723,19 +723,19 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "تأیید موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کد تأیید شد. می‌توانید رمز عبور جدید را وارد کنید."
+                                            "example": ""
                                         },
                                         "reset_token": {
-                                            "description": "توکن موقت برای تغییر رمز عبور",
+                                            "description": "",
                                             "type": "string",
-                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -744,14 +744,14 @@
                         }
                     },
                     "400": {
-                        "description": "کد نامعتبر یا منقضی شده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کد تأیید نامعتبر است یا منقضی شده است."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -760,14 +760,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در تأیید کد."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "type": "object"
@@ -786,8 +786,8 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "تنظیم رمز عبور جدید",
-                "description": "تغییر رمز عبور پس از تأیید کد OTP",
+                "summary": "",
+                "description": "",
                 "operationId": "7703a82fcc6647515895149f640b8722",
                 "requestBody": {
                     "required": true,
@@ -800,14 +800,14 @@
                                 ],
                                 "properties": {
                                     "new_password": {
-                                        "description": "رمز عبور جدید (حداقل 6 کاراکتر)",
+                                        "description": "",
                                         "type": "string",
                                         "format": "password",
                                         "minLength": 6,
                                         "example": "newpassword123"
                                     },
                                     "new_password_confirmation": {
-                                        "description": "تأیید رمز عبور جدید",
+                                        "description": "",
                                         "type": "string",
                                         "format": "password",
                                         "example": "newpassword123"
@@ -820,14 +820,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "تغییر رمز عبور موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "رمز عبور با موفقیت تغییر کرد."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -836,14 +836,14 @@
                         }
                     },
                     "400": {
-                        "description": "رمز عبور و تأیید آن مطابقت ندارند",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "رمز عبور و تأیید رمز عبور مطابقت ندارند."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -852,14 +852,14 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده یا توکن نامعتبر",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -868,14 +868,14 @@
                         }
                     },
                     "403": {
-                        "description": "توکن فاقد دسترسی لازم",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "این توکن مجاز به تغییر رمز عبور نیست."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -884,14 +884,14 @@
                         }
                     },
                     "422": {
-                        "description": "خطای اعتبارسنجی",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "مشکل در تغییر رمز عبور."
+                                            "example": ""
                                         },
                                         "errors": {
                                             "properties": {
@@ -899,7 +899,7 @@
                                                     "type": "array",
                                                     "items": {
                                                         "type": "string",
-                                                        "example": "The new password must be at least 6 characters."
+                                                        "example": ""
                                                     }
                                                 }
                                             },
