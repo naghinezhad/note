@@ -17,6 +17,8 @@ class CoinPackage extends Model
         'price',
         'discount_percentage',
         'is_active',
+        'link_cafebazaar',
+        'link_myket',
     ];
 
     protected $casts = [

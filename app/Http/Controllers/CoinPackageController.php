@@ -49,7 +49,9 @@ class CoinPackageController extends Controller
      *                 @OA\Property(property="created_at", type="string", format="date-time", example=""),
      *                 @OA\Property(property="updated_at", type="string", format="date-time", example=""),
      *                 @OA\Property(property="final_price", type="integer", example=1),
-     *                 @OA\Property(property="discount_amount", type="integer", example=1)
+     *                 @OA\Property(property="discount_amount", type="integer", example=1),
+     *                 @OA\Property(property="link_cafebazaar", type="string", example=""),
+     *                 @OA\Property(property="link_myket", type="string", example="")
      *             )
      *         )
      *     )
@@ -71,11 +73,15 @@ class CoinPackageController extends Controller
         $packagesData = $packages->map(function ($package) {
             $packageArray = $package->toArray();
 
-            $packageArray['image'] = URL::temporarySignedRoute(
-                'signed.file',
-                now()->addMinute(),
-                ['path' => $package->image]
-            );
+            if (! empty($package->image)) {
+                $packageArray['image'] = URL::temporarySignedRoute(
+                    'signed.file',
+                    now()->addMinute(),
+                    ['path' => $package->image]
+                );
+            } else {
+                $packageArray['image'] = null;
+            }
 
             return $packageArray;
         });

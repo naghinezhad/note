@@ -36,6 +36,20 @@ class CoinPackagesTable
                     ->label('درصد تخفیف')
                     ->numeric()
                     ->sortable(),
+                TextColumn::make('link_cafebazaar')
+                    ->label('لینک کافه بازار')
+                    ->url(fn ($record) => $record->link_cafebazaar)
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('primary')
+                    ->limit(30),
+                TextColumn::make('link_myket')
+                    ->label('لینک مایکت')
+                    ->url(fn ($record) => $record->link_myket)
+                    ->openUrlInNewTab()
+                    ->icon('heroicon-o-arrow-top-right-on-square')
+                    ->color('primary')
+                    ->limit(30),
                 IconColumn::make('is_active')
                     ->label('وضعیت')
                     ->boolean(),

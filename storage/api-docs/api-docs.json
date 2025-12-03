@@ -1391,6 +1391,14 @@
                                                 "discount_amount": {
                                                     "type": "integer",
                                                     "example": 1
+                                                },
+                                                "link_cafebazaar": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "link_myket": {
+                                                    "type": "string",
+                                                    "example": ""
                                                 }
                                             },
                                             "type": "object"

@@ -20,9 +20,11 @@ return new class extends Migration
             $table->unsignedBigInteger('price');
             $table->unsignedTinyInteger('discount_percentage')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->string('link_cafebazaar')->nullable();
+            $table->string('link_myket')->nullable();
             $table->timestamps();
 
-            $table->index('is_active');
+            $table->index(['is_active', 'name']);
         });
     }
 

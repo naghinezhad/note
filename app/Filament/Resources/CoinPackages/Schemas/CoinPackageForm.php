@@ -37,6 +37,10 @@ class CoinPackageForm
                     ->required()
                     ->numeric()
                     ->default(0),
+                TextInput::make('link_cafebazaar')
+                    ->label('لینک بازار'),
+                TextInput::make('link_myket')
+                    ->label('لینک مایکت'),
                 Toggle::make('is_active')
                     ->label('وضعیت')
                     ->required()
