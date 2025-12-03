@@ -22,9 +22,9 @@ class OtpResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'OTP Codes';
 
-    protected static ?string $navigationLabel = 'کد های OTP';
+    protected static ?string $navigationLabel = 'کد‌های OTP';
 
-    protected static ?string $pluralModelLabel = 'کد های OTP';
+    protected static ?string $pluralModelLabel = 'کد‌های OTP';
 
     protected static ?string $modelLabel = 'OTP';
 

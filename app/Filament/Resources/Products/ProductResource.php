@@ -22,9 +22,9 @@ class ProductResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Product';
 
-    protected static ?string $navigationLabel = 'محصولات';
+    protected static ?string $navigationLabel = 'محصول‌ها';
 
-    protected static ?string $pluralModelLabel = 'محصولات';
+    protected static ?string $pluralModelLabel = 'محصول‌ها';
 
     protected static ?string $modelLabel = 'محصول';
 
