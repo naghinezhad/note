@@ -661,7 +661,6 @@ class ProductController extends Controller
      *             @OA\Property(
      *                 property="transaction",
      *                 type="object",
-     *                 @OA\Property(property="id", type="string", example=""),
      *                 @OA\Property(property="type", type="string", example=""),
      *                 @OA\Property(property="coins", type="integer", example=-1),
      *                 @OA\Property(property="coins_before", type="integer", example=1),

@@ -11,23 +11,20 @@ use Illuminate\Support\Facades\Validator;
 class CoinPackageController extends Controller
 {
     /**
-     * @OA\Post(
-     *     path="/coin-packages/purchase-package",
+     * @OA\Get(
+     *     path="/coin-packages",
      *     summary="",
      *     description="",
      *     tags={"Coin Packages"},
      *     security={{"bearerAuth":{}}},
      *
-     *     @OA\RequestBody(
-     *         required=true,
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="",
+     *         required=false,
      *
-     *         @OA\JsonContent(
-     *             required={"coin_package_id", "paid_amount", "reference_code"},
-     *
-     *             @OA\Property(property="coin_package_id", type="integer", example=1, description=""),
-     *             @OA\Property(property="paid_amount", type="integer", example=1, description=""),
-     *             @OA\Property(property="reference_code", type="string", example="abc", description="")
-     *         )
+     *         @OA\Schema(type="string")
      *     ),
      *
      *     @OA\Response(
@@ -119,6 +116,19 @@ class CoinPackageController extends Controller
      *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             )
      *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=404,
+     *         description=""
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description=""
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description=""
      *     )
      * )
      */

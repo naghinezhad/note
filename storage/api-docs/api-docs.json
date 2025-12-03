@@ -1144,6 +1144,10 @@
                                                                 "is_purchased": {
                                                                     "type": "boolean",
                                                                     "example": true
+                                                                },
+                                                                "is_liked": {
+                                                                    "type": "boolean",
+                                                                    "example": true
                                                                 }
                                                             },
                                                             "type": "object"
@@ -1306,6 +1310,234 @@
                 ]
             }
         },
+        "/coin-packages": {
+            "get": {
+                "tags": [
+                    "Coin Packages"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "79400b6d7464a26c67bfed8c1d6ab9a3",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": ""
+                                        },
+                                        "transaction": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "wallet_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "coins": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "coins_before": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "coins_after": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "paid_amount": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "coin_package_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "reference_code": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": ""
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": ""
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/coin-packages/purchase-package": {
+            "post": {
+                "tags": [
+                    "Coin Packages"
+                ],
+                "summary": "Purchase a coin package",
+                "description": "Handles the purchase of a selected coin package, validates payment, and updates the user's wallet.",
+                "operationId": "e75087caba7c5937d23d9153e821df77",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "coin_package_id",
+                                    "paid_amount",
+                                    "reference_code"
+                                ],
+                                "properties": {
+                                    "coin_package_id": {
+                                        "description": "ID of the coin package to purchase",
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "paid_amount": {
+                                        "description": "Amount paid for the package",
+                                        "type": "integer",
+                                        "example": 100
+                                    },
+                                    "reference_code": {
+                                        "description": "Payment reference code",
+                                        "type": "string",
+                                        "example": "abc123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful purchase",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Package purchased successfully"
+                                        },
+                                        "transaction": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "wallet_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "purchase"
+                                                },
+                                                "coins": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                },
+                                                "coins_before": {
+                                                    "type": "integer",
+                                                    "example": 0
+                                                },
+                                                "coins_after": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                },
+                                                "paid_amount": {
+                                                    "type": "integer",
+                                                    "example": 100
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Coin package purchase"
+                                                },
+                                                "coin_package_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "reference_code": {
+                                                    "type": "string",
+                                                    "example": "abc123"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2023-01-01T00:00:00Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2023-01-01T00:00:00Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": ""
+                    },
+                    "422": {
+                        "description": ""
+                    },
+                    "500": {
+                        "description": ""
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/privacy-policies": {
             "get": {
                 "tags": [
@@ -1369,24 +1601,24 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "دریافت لیست محصولات",
-                "description": "دریافت لیست تمام محصولات فعال با قابلیت جستجو، فیلتر و مرتب‌سازی",
+                "summary": "",
+                "description": "",
                 "operationId": "c1ff6f862214e1896c59cfe0491ce0e8",
                 "parameters": [
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "جستجو در نام و توضیحات محصول",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "example": "لپ تاپ"
+                            "example": ""
                         }
                     },
                     {
                         "name": "category_id",
                         "in": "query",
-                        "description": "فیلتر بر اساس دسته‌بندی",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1396,7 +1628,7 @@
                     {
                         "name": "sort_by",
                         "in": "query",
-                        "description": "مرتب‌سازی محصولات (newest, oldest, most_liked, most_purchased, most_viewed, price_high, price_low)",
+                        "description": "(newest, oldest, most_liked, most_purchased, most_viewed, price_high, price_low)",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -1409,23 +1641,23 @@
                                 "price_high",
                                 "price_low"
                             ],
-                            "example": "newest"
+                            "example": ""
                         }
                     },
                     {
                         "name": "per_page",
                         "in": "query",
-                        "description": "تعداد محصولات در هر صفحه",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "example": 10
+                            "example": 1
                         }
                     },
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "شماره صفحه",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1435,7 +1667,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق لیست محصولات",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1450,42 +1682,65 @@
                                                     },
                                                     "name": {
                                                         "type": "string",
-                                                        "example": "لپ تاپ ایسوس"
+                                                        "example": ""
+                                                    },
+                                                    "high_quality_image": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "low_quality_image": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "price": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "description": {
                                                         "type": "string",
-                                                        "example": "لپ تاپ گیمینگ با مشخصات بالا"
+                                                        "example": ""
                                                     },
-                                                    "price": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 15000000
+                                                    "likes": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "views": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "purchased": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "category_id": {
                                                         "type": "integer",
                                                         "example": 1
                                                     },
-                                                    "likes": {
-                                                        "type": "integer",
-                                                        "example": 120
-                                                    },
-                                                    "purchased": {
-                                                        "type": "integer",
-                                                        "example": 45
-                                                    },
-                                                    "views": {
-                                                        "type": "integer",
-                                                        "example": 580
-                                                    },
                                                     "is_active": {
                                                         "type": "boolean",
                                                         "example": true
+                                                    },
+                                                    "is_3d": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "example": ""
                                                     },
                                                     "is_free": {
                                                         "type": "boolean",
                                                         "example": false
                                                     },
                                                     "is_purchased": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "is_liked": {
                                                         "type": "boolean",
                                                         "example": false
                                                     },
@@ -1497,11 +1752,27 @@
                                                             },
                                                             "name": {
                                                                 "type": "string",
-                                                                "example": "الکترونیک"
+                                                                "example": ""
                                                             },
                                                             "color": {
                                                                 "type": "string",
-                                                                "example": "#FF5733"
+                                                                "example": ""
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "order": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": ""
                                                             }
                                                         },
                                                         "type": "object"
@@ -1514,11 +1785,11 @@
                                             "properties": {
                                                 "total": {
                                                     "type": "integer",
-                                                    "example": 100
+                                                    "example": 1
                                                 },
                                                 "per_page": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 },
                                                 "current_page": {
                                                     "type": "integer",
@@ -1526,7 +1797,7 @@
                                                 },
                                                 "last_page": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 },
                                                 "from": {
                                                     "type": "integer",
@@ -1534,7 +1805,7 @@
                                                 },
                                                 "to": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 }
                                             },
                                             "type": "object"
@@ -1546,14 +1817,14 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -1574,24 +1845,24 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "دریافت لیست خریدهای من",
-                "description": "دریافت لیست محصولات خریداری شده توسط کاربر با قابلیت جستجو، فیلتر و مرتب‌سازی",
+                "summary": "",
+                "description": "",
                 "operationId": "87142a09416e77431ac9ac5c4cb10069",
                 "parameters": [
                     {
                         "name": "search",
                         "in": "query",
-                        "description": "جستجو در نام و توضیحات محصول",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "string",
-                            "example": "لپ تاپ"
+                            "example": ""
                         }
                     },
                     {
                         "name": "category_id",
                         "in": "query",
-                        "description": "فیلتر بر اساس دسته‌بندی",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1601,7 +1872,7 @@
                     {
                         "name": "sort_by",
                         "in": "query",
-                        "description": "مرتب‌سازی محصولات (newest, oldest, price_high, price_low)",
+                        "description": "(newest, oldest, price_high, price_low)",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -1611,23 +1882,23 @@
                                 "price_high",
                                 "price_low"
                             ],
-                            "example": "newest"
+                            "example": ""
                         }
                     },
                     {
                         "name": "per_page",
                         "in": "query",
-                        "description": "تعداد محصولات در هر صفحه",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
-                            "example": 10
+                            "example": 1
                         }
                     },
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "شماره صفحه",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1637,7 +1908,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق لیست خریدها",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1652,30 +1923,67 @@
                                                     },
                                                     "name": {
                                                         "type": "string",
-                                                        "example": "لپ تاپ ایسوس"
+                                                        "example": ""
+                                                    },
+                                                    "high_quality_image": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "low_quality_image": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "price": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "description": {
                                                         "type": "string",
-                                                        "example": "لپ تاپ گیمینگ با مشخصات بالا"
+                                                        "example": ""
                                                     },
-                                                    "price": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 15000000
+                                                    "likes": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "views": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "purchased": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "category_id": {
                                                         "type": "integer",
                                                         "example": 1
                                                     },
-                                                    "pivot": {
-                                                        "properties": {
-                                                            "purchased_at": {
-                                                                "type": "string",
-                                                                "format": "date-time",
-                                                                "example": "2024-01-15T10:30:00.000000Z"
-                                                            }
-                                                        },
-                                                        "type": "object"
+                                                    "is_active": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "is_3d": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "created_at": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "updated_at": {
+                                                        "type": "string",
+                                                        "example": ""
+                                                    },
+                                                    "is_free": {
+                                                        "type": "boolean",
+                                                        "example": false
+                                                    },
+                                                    "is_purchased": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    },
+                                                    "is_liked": {
+                                                        "type": "boolean",
+                                                        "example": true
                                                     },
                                                     "category": {
                                                         "properties": {
@@ -1685,11 +1993,48 @@
                                                             },
                                                             "name": {
                                                                 "type": "string",
-                                                                "example": "الکترونیک"
+                                                                "example": ""
                                                             },
                                                             "color": {
                                                                 "type": "string",
-                                                                "example": "#FF5733"
+                                                                "example": ""
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "order": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    },
+                                                    "pivot": {
+                                                        "properties": {
+                                                            "user_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "product_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "example": ""
                                                             }
                                                         },
                                                         "type": "object"
@@ -1702,11 +2047,11 @@
                                             "properties": {
                                                 "total": {
                                                     "type": "integer",
-                                                    "example": 25
+                                                    "example": 1
                                                 },
                                                 "per_page": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 },
                                                 "current_page": {
                                                     "type": "integer",
@@ -1714,7 +2059,7 @@
                                                 },
                                                 "last_page": {
                                                     "type": "integer",
-                                                    "example": 3
+                                                    "example": 1
                                                 },
                                                 "from": {
                                                     "type": "integer",
@@ -1722,7 +2067,7 @@
                                                 },
                                                 "to": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 }
                                             },
                                             "type": "object"
@@ -1734,14 +2079,14 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "Unauthenticated."
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -1762,24 +2107,24 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "دریافت اطلاعات یک محصول",
-                "description": "دریافت اطلاعات کامل یک محصول بر اساس شناسه و ثبت بازدید",
+                "summary": "",
+                "description": "",
                 "operationId": "b46f4aa73232d0368eee698a082342a4",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "شناسه محصول",
+                        "description": "",
                         "required": true,
                         "schema": {
                             "type": "integer",
-                            "example": 1
+                            "example": 2
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق اطلاعات محصول",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1792,16 +2137,16 @@
                                                 },
                                                 "name": {
                                                     "type": "string",
-                                                    "example": "لپ تاپ ایسوس"
+                                                    "example": ""
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "example": "لپ تاپ گیمینگ با مشخصات بالا"
+                                                    "example": ""
                                                 },
                                                 "price": {
                                                     "type": "number",
                                                     "format": "float",
-                                                    "example": 15000000
+                                                    "example": 1
                                                 },
                                                 "category_id": {
                                                     "type": "integer",
@@ -1809,27 +2154,35 @@
                                                 },
                                                 "likes": {
                                                     "type": "integer",
-                                                    "example": 120
+                                                    "example": 1
                                                 },
                                                 "purchased": {
                                                     "type": "integer",
-                                                    "example": 45
+                                                    "example": 1
                                                 },
                                                 "views": {
                                                     "type": "integer",
-                                                    "example": 581
+                                                    "example": 1
                                                 },
                                                 "is_active": {
                                                     "type": "boolean",
                                                     "example": true
                                                 },
+                                                "is_3d": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
                                                 "is_free": {
                                                     "type": "boolean",
-                                                    "example": false
+                                                    "example": true
                                                 },
                                                 "is_purchased": {
                                                     "type": "boolean",
-                                                    "example": false
+                                                    "example": true
+                                                },
+                                                "is_liked": {
+                                                    "type": "boolean",
+                                                    "example": true
                                                 },
                                                 "category": {
                                                     "properties": {
@@ -1839,11 +2192,11 @@
                                                         },
                                                         "name": {
                                                             "type": "string",
-                                                            "example": "الکترونیک"
+                                                            "example": ""
                                                         },
                                                         "color": {
                                                             "type": "string",
-                                                            "example": "#FF5733"
+                                                            "example": ""
                                                         }
                                                     },
                                                     "type": "object"
@@ -1858,7 +2211,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1874,14 +2227,14 @@
                         }
                     },
                     "404": {
-                        "description": "محصول یافت نشد",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "محصول یافت نشد"
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -1902,14 +2255,14 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "لایک یا حذف لایک محصول",
-                "description": "لایک کردن یا برداشتن لایک از یک محصول",
+                "summary": "",
+                "description": "       ",
                 "operationId": "f6204ac39235e27f73768ff877cd1f23",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "شناسه محصول",
+                        "description": "",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -1919,7 +2272,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "عملیات موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1928,7 +2281,7 @@
                                             "properties": {
                                                 "message": {
                                                     "type": "string",
-                                                    "example": "محصول لایک شد"
+                                                    "example": ""
                                                 }
                                             },
                                             "type": "object"
@@ -1937,7 +2290,7 @@
                                             "properties": {
                                                 "message": {
                                                     "type": "string",
-                                                    "example": "لایک برداشته شد"
+                                                    "example": ""
                                                 }
                                             },
                                             "type": "object"
@@ -1948,7 +2301,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1964,14 +2317,14 @@
                         }
                     },
                     "404": {
-                        "description": "محصول یافت نشد",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "محصول یافت نشد"
+                                            "example": ""
                                         }
                                     },
                                     "type": "object"
@@ -1992,14 +2345,14 @@
                 "tags": [
                     "Products"
                 ],
-                "summary": "خرید محصول",
-                "description": "خریداری کردن یک محصول توسط کاربر",
+                "summary": "",
+                "description": "",
                 "operationId": "e1a1c08dba624f84125a1d81ae936a29",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "شناسه محصول",
+                        "description": "",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -2009,62 +2362,73 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "خرید موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "محصول با موفقیت خریداری شد"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "محصول قبلاً خریداری شده است",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
+                                            "example": ""
+                                        },
+                                        "tracking_code": {
                                             "type": "string",
-                                            "example": "شما قبلاً این محصول را خریداری کرده‌اید"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "احراز هویت نشده",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "محصول یافت نشد",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "محصول یافت نشد"
+                                            "example": ""
+                                        },
+                                        "transaction": {
+                                            "properties": {
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "coins": {
+                                                    "type": "integer",
+                                                    "example": -1
+                                                },
+                                                "coins_before": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "coins_after": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "paid_amount": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "product_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "reference_code": {
+                                                    "type": "string",
+                                                    "example": ""
+                                                },
+                                                "wallet_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": ""
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": ""
+                                                },
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -2224,7 +2588,7 @@
                 ],
                 "summary": "",
                 "description": "",
-                "operationId": "92884b373e354bacec5be74f2e046805",
+                "operationId": "32f3d42f4d08f2f58f709012d7d29d63",
                 "responses": {
                     "200": {
                         "description": "",
@@ -2242,9 +2606,8 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
-                                                "balance": {
-                                                    "type": "number",
-                                                    "format": "float",
+                                                "coins": {
+                                                    "type": "integer",
                                                     "example": 1
                                                 },
                                                 "created_at": {
@@ -2259,22 +2622,6 @@
                                                 }
                                             },
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -2298,44 +2645,6 @@
                 "summary": "",
                 "description": "",
                 "operationId": "e140d9fc0ac708394f008018989ce6ad",
-                "parameters": [
-                    {
-                        "name": "type",
-                        "in": "query",
-                        "description": "(deposit, withdraw, purchase, refund)",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "deposit",
-                                "withdraw",
-                                "purchase",
-                                "refund"
-                            ],
-                            "example": ""
-                        }
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": 10
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "example": 1
-                        }
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "",
@@ -2357,28 +2666,23 @@
                                                     },
                                                     "type": {
                                                         "type": "string",
-                                                        "enum": [
-                                                            "deposit",
-                                                            "withdraw",
-                                                            "purchase",
-                                                            "refund"
-                                                        ],
-                                                        "example": "purchase"
+                                                        "example": ""
                                                     },
-                                                    "amount": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 15000
+                                                    "coins": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
-                                                    "balance_before": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 250000
+                                                    "coins_before": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
-                                                    "balance_after": {
-                                                        "type": "number",
-                                                        "format": "float",
-                                                        "example": 235000
+                                                    "coins_after": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "paid_amount": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "description": {
                                                         "type": "string",
@@ -2386,23 +2690,25 @@
                                                     },
                                                     "product_id": {
                                                         "type": "integer",
-                                                        "example": 1,
-                                                        "nullable": true
+                                                        "example": 1
+                                                    },
+                                                    "coin_package_id": {
+                                                        "type": "integer",
+                                                        "example": 1
                                                     },
                                                     "reference_code": {
                                                         "type": "string",
-                                                        "example": "TR-20241130-A1B2C3",
-                                                        "nullable": true
+                                                        "example": ""
                                                     },
                                                     "created_at": {
                                                         "type": "string",
                                                         "format": "date-time",
-                                                        "example": "2024-01-15T10:30:00.000000Z"
+                                                        "example": ""
                                                     },
                                                     "updated_at": {
                                                         "type": "string",
                                                         "format": "date-time",
-                                                        "example": "2024-01-15T10:30:00.000000Z"
+                                                        "example": ""
                                                     },
                                                     "product": {
                                                         "properties": {
@@ -2413,6 +2719,104 @@
                                                             "name": {
                                                                 "type": "string",
                                                                 "example": ""
+                                                            },
+                                                            "high_quality_image": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "low_quality_image": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "price": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "description": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "likes": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "views": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "purchased": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "category_id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "is_active": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "is_3d": {
+                                                                "type": "boolean",
+                                                                "example": false
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": ""
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": ""
+                                                            }
+                                                        },
+                                                        "type": "object",
+                                                        "nullable": true
+                                                    },
+                                                    "coin_package": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": ""
+                                                            },
+                                                            "coins": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "price": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "discount_percentage": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "is_active": {
+                                                                "type": "boolean",
+                                                                "example": true
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": ""
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": ""
+                                                            },
+                                                            "final_price": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "discount_amount": {
+                                                                "type": "integer",
+                                                                "example": 1
                                                             }
                                                         },
                                                         "type": "object",
@@ -2426,11 +2830,11 @@
                                             "properties": {
                                                 "total": {
                                                     "type": "integer",
-                                                    "example": 50
+                                                    "example": 1
                                                 },
                                                 "per_page": {
                                                     "type": "integer",
-                                                    "example": 10
+                                                    "example": 1
                                                 },
                                                 "current_page": {
                                                     "type": "integer",
@@ -2438,7 +2842,7 @@
                                                 },
                                                 "last_page": {
                                                     "type": "integer",
-                                                    "example": 5
+                                                    "example": 1
                                                 },
                                                 "from": {
                                                     "type": "integer",
@@ -2446,157 +2850,10 @@
                                                 },
                                                 "to": {
                                                     "type": "integer",
-                                                    "example": 10
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "bearerAuth": []
-                    }
-                ]
-            }
-        },
-        "/wallet/deposit": {
-            "post": {
-                "tags": [
-                    "Wallet"
-                ],
-                "summary": "",
-                "description": "",
-                "operationId": "566a24fb27cc48c154aa4e021a49547b",
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "required": [
-                                    "amount"
-                                ],
-                                "properties": {
-                                    "amount": {
-                                        "description": "",
-                                        "type": "number",
-                                        "format": "float",
-                                        "example": 1
-                                    },
-                                    "reference_code": {
-                                        "description": "",
-                                        "type": "string",
-                                        "example": ""
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": ""
-                                        },
-                                        "transaction": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "integer",
-                                                    "example": 15
-                                                },
-                                                "wallet_id": {
-                                                    "type": "integer",
                                                     "example": 1
-                                                },
-                                                "type": {
-                                                    "type": "string",
-                                                    "example": "deposit"
-                                                },
-                                                "amount": {
-                                                    "type": "number",
-                                                    "format": "float",
-                                                    "example": 100000
-                                                },
-                                                "balance_before": {
-                                                    "type": "number",
-                                                    "format": "float",
-                                                    "example": 250000
-                                                },
-                                                "balance_after": {
-                                                    "type": "number",
-                                                    "format": "float",
-                                                    "example": 350000
-                                                },
-                                                "description": {
-                                                    "type": "string",
-                                                    "example": ""
-                                                },
-                                                "product_id": {
-                                                    "type": "integer",
-                                                    "example": null,
-                                                    "nullable": true
-                                                },
-                                                "reference_code": {
-                                                    "type": "string",
-                                                    "example": "PAY-123456789",
-                                                    "nullable": true
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2024-01-15T10:30:00.000000Z"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "example": "2024-01-15T10:30:00.000000Z"
                                                 }
                                             },
                                             "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Unauthenticated."
                                         }
                                     },
                                     "type": "object"
@@ -2631,6 +2888,10 @@
         {
             "name": "Categories",
             "description": "Categories"
+        },
+        {
+            "name": "Coin Packages",
+            "description": "Coin Packages"
         },
         {
             "name": "Privacy Policy",
