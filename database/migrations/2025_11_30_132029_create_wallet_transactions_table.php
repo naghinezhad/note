@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('wallet_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('wallet_id')->constrained()->cascadeOnDelete();
-            $table->enum('type', ['deposit', 'withdraw', 'purchase', 'refund']);
-            $table->decimal('amount', 15, 2);
-            $table->decimal('balance_before', 15, 2);
-            $table->decimal('balance_after', 15, 2);
+            $table->enum('type', ['purchase_package', 'purchase_product']);
+            $table->bigInteger('coins');
+            $table->unsignedBigInteger('coins_before');
+            $table->unsignedBigInteger('coins_after');
+            $table->unsignedBigInteger('paid_amount')->default(0);
             $table->string('description')->nullable();
             $table->foreignId('product_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('coin_package_id')->nullable()->constrained()->nullOnDelete();
             $table->string('reference_code', 50)->nullable()->unique();
             $table->timestamps();
 

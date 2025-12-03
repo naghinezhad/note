@@ -22,15 +22,15 @@ class CategoryResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'Category';
 
-    protected static ?string $navigationLabel = 'دسته بندی ها';
+    protected static ?string $navigationLabel = 'دسته بندی‌ها';
 
-    protected static ?string $pluralModelLabel = 'دسته بندی ها';
+    protected static ?string $pluralModelLabel = 'دسته بندی‌ها';
 
     protected static ?string $modelLabel = 'دسته بندی';
 
     public static function getNavigationSort(): ?int
     {
-        return 3;
+        return 4;
     }
 
     public static function form(Schema $schema): Schema

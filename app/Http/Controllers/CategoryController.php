@@ -149,6 +149,7 @@ class CategoryController extends Controller
      *                             @OA\Property(property="updated_at", type="string", format="date-time", example=""),
      *                             @OA\Property(property="is_free", type="boolean", example=true),
      *                             @OA\Property(property="is_purchased", type="boolean", example=true),
+     *                             @OA\Property(property="is_liked", type="boolean", example=true)
      *                         )
      *                     )
      *                 )
@@ -185,23 +186,46 @@ class CategoryController extends Controller
 
             $categoryArray['products'] = $category->products->map(function ($product) use ($user) {
                 $productArray = $product->toArray();
+
                 $productArray['is_free'] = $product->price == 0;
                 $productArray['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
+                $productArray['is_liked'] = $user ? $product->likedUsers()->where('user_id', $user->id)->exists() : false;
 
                 $productArray['high_quality_image'] = URL::temporarySignedRoute(
                     'signed.file',
-                    now()->addYear(),
+                    now()->addMinute(),
                     ['path' => $product->high_quality_image]
                 );
 
                 $productArray['low_quality_image'] = URL::temporarySignedRoute(
                     'signed.file',
-                    now()->addYear(),
+                    now()->addMinute(),
                     ['path' => $product->low_quality_image]
                 );
 
                 return $productArray;
-            })->toArray();
+            })->sortByDesc(function ($product) {
+                if ($product['is_purchased'] && $product['is_liked'] && $product['price'] > 0) {
+                    return 7;
+                }
+                if ($product['is_purchased'] && $product['is_liked'] && $product['price'] == 0) {
+                    return 6;
+                }
+                if ($product['is_purchased']) {
+                    return 5;
+                }
+                if ($product['is_liked'] && $product['price'] > 0) {
+                    return 4;
+                }
+                if ($product['is_liked'] && $product['price'] == 0) {
+                    return 3;
+                }
+                if ($product['price'] > 0) {
+                    return 2;
+                }
+
+                return 1;
+            })->values()->toArray();
 
             return $categoryArray;
         });

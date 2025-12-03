@@ -67,24 +67,25 @@ class User extends Authenticatable implements FilamentUser
         parent::boot();
 
         static::created(function ($user) {
-            $user->wallet()->create(['balance' => 100]);
+            $user->wallet()->create(['coins' => 100]);
         });
     }
 
     public function likedProducts(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'product_user_likes');
+        return $this->belongsToMany(Product::class, 'product_user_likes')
+            ->withTimestamps();
     }
 
     public function viewedProducts(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'product_user_views');
+        return $this->belongsToMany(Product::class, 'product_user_views')
+            ->withTimestamps();
     }
 
     public function purchasedProducts(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'product_user_purchased')
-            ->withTimestamps()
-            ->withPivot('purchased_at', 'purchase_price', 'tracking_code');
+            ->withTimestamps();
     }
 }

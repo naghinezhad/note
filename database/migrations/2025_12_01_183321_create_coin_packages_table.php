@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_user_purchased', function (Blueprint $table) {
+        Schema::create('coin_packages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->unsignedBigInteger('coins');
+            $table->unsignedBigInteger('price');
+            $table->unsignedTinyInteger('discount_percentage')->default(0);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->unique(['user_id', 'product_id']);
+            $table->index('is_active');
         });
     }
 
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_user_purchased');
+        Schema::dropIfExists('coin_packages');
     }
 };

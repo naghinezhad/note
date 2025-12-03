@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('high_quality_image');
             $table->string('low_quality_image');
-            $table->decimal('price', 10, 2);
+            $table->unsignedInteger('price')->default(0);
             $table->text('description')->nullable();
             $table->unsignedBigInteger('likes')->default(0);
             $table->unsignedBigInteger('views')->default(0);

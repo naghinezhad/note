@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CoinPackageController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -45,8 +46,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('wallet')->group(function () {
-        Route::get('/', [WalletController::class, 'show']);
+        Route::get('/', [WalletController::class, 'index']);
         Route::get('/transactions', [WalletController::class, 'transactions']);
-        Route::post('/deposit', [WalletController::class, 'deposit']);
+    });
+
+    Route::prefix('coin-packages')->group(function () {
+        Route::get('/', [CoinPackageController::class, 'index']);
+        Route::post('/purchase-package', [CoinPackageController::class, 'purchasePackage']);
     });
 });

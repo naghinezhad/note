@@ -13,24 +13,24 @@ class ProductController extends Controller
     /**
      * @OA\Get(
      *     path="/products",
-     *     summary="دریافت لیست محصولات",
-     *     description="دریافت لیست تمام محصولات فعال با قابلیت جستجو، فیلتر و مرتب‌سازی",
+     *     summary="",
+     *     description="",
      *     tags={"Products"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="جستجو در نام و توضیحات محصول",
+     *         description="",
      *         required=false,
      *
-     *         @OA\Schema(type="string", example="لپ تاپ")
+     *         @OA\Schema(type="string", example="")
      *     ),
      *
      *     @OA\Parameter(
      *         name="category_id",
      *         in="query",
-     *         description="فیلتر بر اساس دسته‌بندی",
+     *         description="",
      *         required=false,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -39,25 +39,29 @@ class ProductController extends Controller
      *     @OA\Parameter(
      *         name="sort_by",
      *         in="query",
-     *         description="مرتب‌سازی محصولات (newest, oldest, most_liked, most_purchased, most_viewed, price_high, price_low)",
+     *         description="(newest, oldest, most_liked, most_purchased, most_viewed, price_high, price_low)",
      *         required=false,
      *
-     *         @OA\Schema(type="string", enum={"newest", "oldest", "most_liked", "most_purchased", "most_viewed", "price_high", "price_low"}, example="newest")
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"newest", "oldest", "most_liked", "most_purchased", "most_viewed", "price_high", "price_low"},
+     *             example=""
+     *         )
      *     ),
      *
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
-     *         description="تعداد محصولات در هر صفحه",
+     *         description="",
      *         required=false,
      *
-     *         @OA\Schema(type="integer", example=10)
+     *         @OA\Schema(type="integer", example=1)
      *     ),
      *
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
-     *         description="شماره صفحه",
+     *         description="",
      *         required=false,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -65,7 +69,7 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="دریافت موفق لیست محصولات",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -77,45 +81,55 @@ class ProductController extends Controller
      *                     type="object",
      *
      *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example="لپ تاپ ایسوس"),
-     *                     @OA\Property(property="description", type="string", example="لپ تاپ گیمینگ با مشخصات بالا"),
-     *                     @OA\Property(property="price", type="number", format="float", example=15000000),
+     *                     @OA\Property(property="name", type="string", example=""),
+     *                     @OA\Property(property="high_quality_image", type="string", example=""),
+     *                     @OA\Property(property="low_quality_image", type="string", example=""),
+     *                     @OA\Property(property="price", type="integer", example=1),
+     *                     @OA\Property(property="description", type="string", example=""),
+     *                     @OA\Property(property="likes", type="integer", example=1),
+     *                     @OA\Property(property="views", type="integer", example=1),
+     *                     @OA\Property(property="purchased", type="integer", example=1),
      *                     @OA\Property(property="category_id", type="integer", example=1),
-     *                     @OA\Property(property="likes", type="integer", example=120),
-     *                     @OA\Property(property="purchased", type="integer", example=45),
-     *                     @OA\Property(property="views", type="integer", example=580),
      *                     @OA\Property(property="is_active", type="boolean", example=true),
+     *                     @OA\Property(property="is_3d", type="boolean", example=false),
+     *                     @OA\Property(property="created_at", type="string", example=""),
+     *                     @OA\Property(property="updated_at", type="string", example=""),
      *                     @OA\Property(property="is_free", type="boolean", example=false),
      *                     @OA\Property(property="is_purchased", type="boolean", example=false),
+     *                     @OA\Property(property="is_liked", type="boolean", example=false),
      *                     @OA\Property(
      *                         property="category",
      *                         type="object",
      *                         @OA\Property(property="id", type="integer", example=1),
-     *                         @OA\Property(property="name", type="string", example="الکترونیک"),
-     *                         @OA\Property(property="color", type="string", example="#FF5733")
+     *                         @OA\Property(property="name", type="string", example=""),
+     *                         @OA\Property(property="color", type="string", example=""),
+     *                         @OA\Property(property="description", type="string", example=""),
+     *                         @OA\Property(property="order", type="integer", example=1),
+     *                         @OA\Property(property="created_at", type="string", example=""),
+     *                         @OA\Property(property="updated_at", type="string", example="")
      *                     )
      *                 )
      *             ),
      *             @OA\Property(
      *                 property="pagination",
      *                 type="object",
-     *                 @OA\Property(property="total", type="integer", example=100),
-     *                 @OA\Property(property="per_page", type="integer", example=10),
+     *                 @OA\Property(property="total", type="integer", example=1),
+     *                 @OA\Property(property="per_page", type="integer", example=1),
      *                 @OA\Property(property="current_page", type="integer", example=1),
-     *                 @OA\Property(property="last_page", type="integer", example=10),
+     *                 @OA\Property(property="last_page", type="integer", example=1),
      *                 @OA\Property(property="from", type="integer", example=1),
-     *                 @OA\Property(property="to", type="integer", example=10)
+     *                 @OA\Property(property="to", type="integer", example=1)
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="احراز هویت نشده",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *             @OA\Property(property="message", type="string", example="")
      *         )
      *     )
      * )
@@ -180,16 +194,17 @@ class ProductController extends Controller
             $productArray = $product->toArray();
             $productArray['is_free'] = $product->price == 0;
             $productArray['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
+            $productArray['is_liked'] = $user ? $product->likedUsers()->where('user_id', $user->id)->exists() : false;
 
             $productArray['high_quality_image'] = URL::temporarySignedRoute(
                 'signed.file',
-                now()->addYear(),
+                now()->addMinute(),
                 ['path' => $product->high_quality_image]
             );
 
             $productArray['low_quality_image'] = URL::temporarySignedRoute(
                 'signed.file',
-                now()->addYear(),
+                now()->addMinute(),
                 ['path' => $product->low_quality_image]
             );
 
@@ -212,24 +227,24 @@ class ProductController extends Controller
     /**
      * @OA\Get(
      *     path="/products/my-purchases",
-     *     summary="دریافت لیست خریدهای من",
-     *     description="دریافت لیست محصولات خریداری شده توسط کاربر با قابلیت جستجو، فیلتر و مرتب‌سازی",
+     *     summary="",
+     *     description="",
      *     tags={"Products"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="جستجو در نام و توضیحات محصول",
+     *         description="",
      *         required=false,
      *
-     *         @OA\Schema(type="string", example="لپ تاپ")
+     *         @OA\Schema(type="string", example="")
      *     ),
      *
      *     @OA\Parameter(
      *         name="category_id",
      *         in="query",
-     *         description="فیلتر بر اساس دسته‌بندی",
+     *         description="",
      *         required=false,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -238,25 +253,29 @@ class ProductController extends Controller
      *     @OA\Parameter(
      *         name="sort_by",
      *         in="query",
-     *         description="مرتب‌سازی محصولات (newest, oldest, price_high, price_low)",
+     *         description="(newest, oldest, price_high, price_low)",
      *         required=false,
      *
-     *         @OA\Schema(type="string", enum={"newest", "oldest", "price_high", "price_low"}, example="newest")
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"newest", "oldest", "price_high", "price_low"},
+     *             example=""
+     *         )
      *     ),
      *
      *     @OA\Parameter(
      *         name="per_page",
      *         in="query",
-     *         description="تعداد محصولات در هر صفحه",
+     *         description="",
      *         required=false,
      *
-     *         @OA\Schema(type="integer", example=10)
+     *         @OA\Schema(type="integer", example=1)
      *     ),
      *
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
-     *         description="شماره صفحه",
+     *         description="",
      *         required=false,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -264,7 +283,7 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="دریافت موفق لیست خریدها",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -276,44 +295,63 @@ class ProductController extends Controller
      *                     type="object",
      *
      *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example="لپ تاپ ایسوس"),
-     *                     @OA\Property(property="description", type="string", example="لپ تاپ گیمینگ با مشخصات بالا"),
-     *                     @OA\Property(property="price", type="number", format="float", example=15000000),
+     *                     @OA\Property(property="name", type="string", example=""),
+     *                     @OA\Property(property="high_quality_image", type="string", example=""),
+     *                     @OA\Property(property="low_quality_image", type="string", example=""),
+     *                     @OA\Property(property="price", type="integer", example=1),
+     *                     @OA\Property(property="description", type="string", example=""),
+     *                     @OA\Property(property="likes", type="integer", example=1),
+     *                     @OA\Property(property="views", type="integer", example=1),
+     *                     @OA\Property(property="purchased", type="integer", example=1),
      *                     @OA\Property(property="category_id", type="integer", example=1),
-     *                     @OA\Property(
-     *                         property="pivot",
-     *                         type="object",
-     *                         @OA\Property(property="purchased_at", type="string", format="date-time", example="2024-01-15T10:30:00.000000Z")
-     *                     ),
+     *                     @OA\Property(property="is_active", type="boolean", example=true),
+     *                     @OA\Property(property="is_3d", type="boolean", example=false),
+     *                     @OA\Property(property="created_at", type="string", example=""),
+     *                     @OA\Property(property="updated_at", type="string", example=""),
+     *                     @OA\Property(property="is_free", type="boolean", example=false),
+     *                     @OA\Property(property="is_purchased", type="boolean", example=true),
+     *                     @OA\Property(property="is_liked", type="boolean", example=true),
      *                     @OA\Property(
      *                         property="category",
      *                         type="object",
      *                         @OA\Property(property="id", type="integer", example=1),
-     *                         @OA\Property(property="name", type="string", example="الکترونیک"),
-     *                         @OA\Property(property="color", type="string", example="#FF5733")
+     *                         @OA\Property(property="name", type="string", example=""),
+     *                         @OA\Property(property="color", type="string", example=""),
+     *                         @OA\Property(property="description", type="string", example=""),
+     *                         @OA\Property(property="order", type="integer", example=1),
+     *                         @OA\Property(property="created_at", type="string", example=""),
+     *                         @OA\Property(property="updated_at", type="string", example="")
+     *                     ),
+     *                     @OA\Property(
+     *                         property="pivot",
+     *                         type="object",
+     *                         @OA\Property(property="user_id", type="integer", example=1),
+     *                         @OA\Property(property="product_id", type="integer", example=1),
+     *                         @OA\Property(property="created_at", type="string", example=""),
+     *                         @OA\Property(property="updated_at", type="string", example="")
      *                     )
      *                 )
      *             ),
      *             @OA\Property(
      *                 property="pagination",
      *                 type="object",
-     *                 @OA\Property(property="total", type="integer", example=25),
-     *                 @OA\Property(property="per_page", type="integer", example=10),
+     *                 @OA\Property(property="total", type="integer", example=1),
+     *                 @OA\Property(property="per_page", type="integer", example=1),
      *                 @OA\Property(property="current_page", type="integer", example=1),
-     *                 @OA\Property(property="last_page", type="integer", example=3),
+     *                 @OA\Property(property="last_page", type="integer", example=1),
      *                 @OA\Property(property="from", type="integer", example=1),
-     *                 @OA\Property(property="to", type="integer", example=10)
+     *                 @OA\Property(property="to", type="integer", example=1)
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="احراز هویت نشده",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *             @OA\Property(property="message", type="string", example="")
      *         )
      *     )
      * )
@@ -361,23 +399,23 @@ class ProductController extends Controller
 
         $perPage = $request->get('per_page', 10);
         $products = $query->with('category')
-            ->withPivot('purchased_at')
             ->paginate($perPage);
 
         $productsData = $products->map(function ($product) use ($user) {
             $productArray = $product->toArray();
             $productArray['is_free'] = $product->price == 0;
             $productArray['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
+            $productArray['is_liked'] = $user ? $product->likedUsers()->where('user_id', $user->id)->exists() : false;
 
             $productArray['high_quality_image'] = URL::temporarySignedRoute(
                 'signed.file',
-                now()->addYear(),
+                now()->addMinute(),
                 ['path' => $product->high_quality_image]
             );
 
             $productArray['low_quality_image'] = URL::temporarySignedRoute(
                 'signed.file',
-                now()->addYear(),
+                now()->addMinute(),
                 ['path' => $product->low_quality_image]
             );
 
@@ -400,23 +438,23 @@ class ProductController extends Controller
     /**
      * @OA\Get(
      *     path="/products/{id}",
-     *     summary="دریافت اطلاعات یک محصول",
-     *     description="دریافت اطلاعات کامل یک محصول بر اساس شناسه و ثبت بازدید",
+     *     summary="",
+     *     description="",
      *     tags={"Products"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="شناسه محصول",
+     *         description="",
      *         required=true,
      *
-     *         @OA\Schema(type="integer", example=1)
+     *         @OA\Schema(type="integer", example=2)
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="دریافت موفق اطلاعات محصول",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -424,22 +462,24 @@ class ProductController extends Controller
      *                 property="data",
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="name", type="string", example="لپ تاپ ایسوس"),
-     *                 @OA\Property(property="description", type="string", example="لپ تاپ گیمینگ با مشخصات بالا"),
-     *                 @OA\Property(property="price", type="number", format="float", example=15000000),
+     *                 @OA\Property(property="name", type="string", example=""),
+     *                 @OA\Property(property="description", type="string", example=""),
+     *                 @OA\Property(property="price", type="number", format="float", example=1),
      *                 @OA\Property(property="category_id", type="integer", example=1),
-     *                 @OA\Property(property="likes", type="integer", example=120),
-     *                 @OA\Property(property="purchased", type="integer", example=45),
-     *                 @OA\Property(property="views", type="integer", example=581),
+     *                 @OA\Property(property="likes", type="integer", example=1),
+     *                 @OA\Property(property="purchased", type="integer", example=1),
+     *                 @OA\Property(property="views", type="integer", example=1),
      *                 @OA\Property(property="is_active", type="boolean", example=true),
-     *                 @OA\Property(property="is_free", type="boolean", example=false),
-     *                 @OA\Property(property="is_purchased", type="boolean", example=false),
+     *                 @OA\Property(property="is_3d", type="boolean", example=true),
+     *                 @OA\Property(property="is_free", type="boolean", example=true),
+     *                 @OA\Property(property="is_purchased", type="boolean", example=true),
+     *                 @OA\Property(property="is_liked", type="boolean", example=true),
      *                 @OA\Property(
      *                     property="category",
      *                     type="object",
      *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example="الکترونیک"),
-     *                     @OA\Property(property="color", type="string", example="#FF5733")
+     *                     @OA\Property(property="name", type="string", example=""),
+     *                     @OA\Property(property="color", type="string", example="")
      *                 )
      *             )
      *         )
@@ -447,7 +487,7 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=401,
-     *         description="احراز هویت نشده",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -457,11 +497,11 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=404,
-     *         description="محصول یافت نشد",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="محصول یافت نشد")
+     *             @OA\Property(property="message", type="string", example="")
      *         )
      *     )
      * )
@@ -477,26 +517,26 @@ class ProductController extends Controller
         }
 
         $user = $request->user();
-        $hasViewed = $product->viewedUsers()->where('user_id', $user->id)->exists();
 
-        if (! $hasViewed) {
+        if ($user && ! $product->viewedUsers()->where('user_id', $user->id)->exists()) {
             $product->viewedUsers()->attach($user->id);
             $product->increment('views');
         }
 
         $productData = $product->toArray();
         $productData['is_free'] = $product->price == 0;
-        $productData['is_purchased'] = $product->purchasedUsers()->where('user_id', $user->id)->exists();
+        $productData['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
+        $productData['is_liked'] = $user ? $product->likedUsers()->where('user_id', $user->id)->exists() : false;
 
-        $productArray['high_quality_image'] = URL::temporarySignedRoute(
+        $productData['high_quality_image'] = URL::temporarySignedRoute(
             'signed.file',
-            now()->addYear(),
+            now()->addMinute(),
             ['path' => $product->high_quality_image]
         );
 
-        $productArray['low_quality_image'] = URL::temporarySignedRoute(
+        $productData['low_quality_image'] = URL::temporarySignedRoute(
             'signed.file',
-            now()->addYear(),
+            now()->addMinute(),
             ['path' => $product->low_quality_image]
         );
 
@@ -508,15 +548,15 @@ class ProductController extends Controller
     /**
      * @OA\Post(
      *     path="/products/like/{id}",
-     *     summary="لایک یا حذف لایک محصول",
-     *     description="لایک کردن یا برداشتن لایک از یک محصول",
+     *     summary="",
+     *     description="       ",
      *     tags={"Products"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="شناسه محصول",
+     *         description="",
      *         required=true,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -524,19 +564,19 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="عملیات موفق",
+     *         description="",
      *
      *         @OA\JsonContent(
      *             oneOf={
      *
      *                 @OA\Schema(
      *
-     *                     @OA\Property(property="message", type="string", example="محصول لایک شد"),
+     *                     @OA\Property(property="message", type="string", example=""),
      *                 ),
      *
      *                 @OA\Schema(
      *
-     *                     @OA\Property(property="message", type="string", example="لایک برداشته شد"),
+     *                     @OA\Property(property="message", type="string", example=""),
      *                 )
      *             }
      *         )
@@ -544,7 +584,7 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=401,
-     *         description="احراز هویت نشده",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
@@ -554,11 +594,11 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=404,
-     *         description="محصول یافت نشد",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="محصول یافت نشد")
+     *             @OA\Property(property="message", type="string", example="")
      *         )
      *     )
      * )
@@ -596,15 +636,15 @@ class ProductController extends Controller
     /**
      * @OA\Post(
      *     path="/products/purchase/{id}",
-     *     summary="خرید محصول",
-     *     description="خریداری کردن یک محصول توسط کاربر",
+     *     summary="",
+     *     description="",
      *     tags={"Products"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="شناسه محصول",
+     *         description="",
      *         required=true,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -612,43 +652,31 @@ class ProductController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="خرید موفق",
+     *         description="",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="محصول با موفقیت خریداری شد"),
+     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="tracking_code", type="string", example=""),
+     *             @OA\Property(
+     *                 property="transaction",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="string", example=""),
+     *                 @OA\Property(property="type", type="string", example=""),
+     *                 @OA\Property(property="coins", type="integer", example=-1),
+     *                 @OA\Property(property="coins_before", type="integer", example=1),
+     *                 @OA\Property(property="coins_after", type="integer", example=1),
+     *                 @OA\Property(property="paid_amount", type="integer", example=1),
+     *                 @OA\Property(property="description", type="string", example=""),
+     *                 @OA\Property(property="product_id", type="integer", example=1),
+     *                 @OA\Property(property="reference_code", type="string", example=""),
+     *                 @OA\Property(property="wallet_id", type="integer", example=1),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example=""),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example=""),
+     *                 @OA\Property(property="id", type="integer", example=1)
+     *             )
      *         )
      *     ),
-     *
-     *     @OA\Response(
-     *         response=400,
-     *         description="محصول قبلاً خریداری شده است",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="message", type="string", example="شما قبلاً این محصول را خریداری کرده‌اید")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=401,
-     *         description="احراز هویت نشده",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
-     *         )
-     *     ),
-     *
-     *     @OA\Response(
-     *         response=404,
-     *         description="محصول یافت نشد",
-     *
-     *         @OA\JsonContent(
-     *
-     *             @OA\Property(property="message", type="string", example="محصول یافت نشد")
-     *         )
-     *     )
      * )
      */
     public function purchase(int $id, Request $request): JsonResponse
@@ -659,6 +687,12 @@ class ProductController extends Controller
             return response()->json([
                 'message' => 'محصول یافت نشد',
             ], 404);
+        }
+
+        if (! $product->is_active) {
+            return response()->json([
+                'message' => 'محصول در دسترس نیست',
+            ], 400);
         }
 
         $user = $request->user();
@@ -679,57 +713,38 @@ class ProductController extends Controller
             ], 404);
         }
 
-        if ($product->price == 0) {
-            $trackingCode = $this->generateTrackingCode();
-
-            $product->purchasedUsers()->attach($user->id, [
-                'purchased_at' => now(),
-                'purchase_price' => 0,
-                'tracking_code' => $trackingCode,
-            ]);
-            $product->increment('purchased');
-
-            return response()->json([
-                'message' => 'محصول رایگان با موفقیت دریافت شد',
-                'tracking_code' => $trackingCode,
-            ]);
-        }
-
-        if (! $wallet->hasBalance($product->price)) {
+        if (! $wallet->hasCoins($product->price)) {
             return response()->json([
                 'message' => 'موجودی کیف پول کافی نیست',
+                'required_coins' => $product->price,
+                'current_coins' => $wallet->coins,
             ], 400);
         }
 
-        DB::beginTransaction();
+        try {
+            DB::beginTransaction();
 
-        $trackingCode = $this->generateTrackingCode();
+            $referenceCode = 'NOTIN-RC-BOOK-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -6));
 
-        $wallet->purchaseProduct($product, $trackingCode);
+            $transaction = $wallet->purchaseProduct($product, $referenceCode);
 
-        $product->purchasedUsers()->attach($user->id, [
-            'purchased_at' => now(),
-            'purchase_price' => $product->price,
-            'tracking_code' => $trackingCode,
-        ]);
+            $product->purchasedUsers()->attach($user->id);
 
-        $product->increment('purchased');
+            $product->increment('purchased');
 
-        DB::commit();
+            DB::commit();
 
-        return response()->json([
-            'message' => 'محصول با موفقیت خریداری شد',
-            'tracking_code' => $trackingCode,
-        ]);
-    }
+            return response()->json([
+                'message' => 'محصول با موفقیت خریداری شد',
+                'transaction' => $transaction,
+            ]);
 
-    // generateTrackingCode
-    private function generateTrackingCode(): string
-    {
-        do {
-            $trackingCode = 'NOTIN-TC-'.date('Ymd').'-'.strtoupper(substr(uniqid(), -6));
-        } while (DB::table('product_user_purchased')->where('tracking_code', $trackingCode)->exists());
+        } catch (\Exception $e) {
+            DB::rollBack();
 
-        return $trackingCode;
+            return response()->json([
+                'message' => 'خطا در خرید محصول: '.$e->getMessage(),
+            ], 500);
+        }
     }
 }

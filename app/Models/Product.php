@@ -41,18 +41,19 @@ class Product extends Model
 
     public function likedUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'product_user_likes');
+        return $this->belongsToMany(User::class, 'product_user_likes')
+            ->withTimestamps();
     }
 
     public function viewedUsers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'product_user_views');
+        return $this->belongsToMany(User::class, 'product_user_views')
+            ->withTimestamps();
     }
 
     public function purchasedUsers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'product_user_purchased')
-            ->withTimestamps()
-            ->withPivot('purchased_at', 'purchase_price', 'tracking_code');
+            ->withTimestamps();
     }
 }

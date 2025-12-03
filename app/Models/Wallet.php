@@ -13,11 +13,11 @@ class Wallet extends Model
 
     protected $fillable = [
         'user_id',
-        'balance',
+        'coins',
     ];
 
     protected $casts = [
-        'balance' => 'integer',
+        'coins' => 'integer',
     ];
 
     public function user(): BelongsTo
@@ -30,81 +30,44 @@ class Wallet extends Model
         return $this->hasMany(WalletTransaction::class);
     }
 
-    public function deposit(float $amount, ?string $description = null, ?string $referenceCode = null): WalletTransaction
+    public function hasCoins(int $coins): bool
     {
-        $balanceBefore = $this->balance;
-        $this->balance += $amount;
+        return $this->coins >= $coins;
+    }
+
+    public function purchasePackage(CoinPackage $package, int $paidAmount, ?string $referenceCode = null): WalletTransaction
+    {
+        $coinsBefore = $this->coins;
+        $this->coins += $package->coins;
         $this->save();
 
         return $this->transactions()->create([
-            'type' => 'deposit',
-            'amount' => $amount,
-            'balance_before' => $balanceBefore,
-            'balance_after' => $this->balance,
-            'description' => $description ?? 'واریز به کیف پول',
+            'type' => 'purchase_package',
+            'coins' => $package->coins,
+            'coins_before' => $coinsBefore,
+            'coins_after' => $this->coins,
+            'paid_amount' => $paidAmount,
+            'description' => 'خرید پکیج '.$package->name,
+            'coin_package_id' => $package->id,
             'reference_code' => $referenceCode,
         ]);
     }
 
-    public function withdraw(float $amount, ?string $description = null): WalletTransaction
+    public function purchaseProduct(Product $product, ?string $referenceCode = null): WalletTransaction
     {
-        if ($this->balance < $amount) {
-            throw new \Exception('موجودی کیف پول کافی نیست');
-        }
-
-        $balanceBefore = $this->balance;
-        $this->balance -= $amount;
+        $coinsBefore = $this->coins;
+        $this->coins -= $product->price;
         $this->save();
 
         return $this->transactions()->create([
-            'type' => 'withdraw',
-            'amount' => $amount,
-            'balance_before' => $balanceBefore,
-            'balance_after' => $this->balance,
-            'description' => $description ?? 'برداشت از کیف پول',
-        ]);
-    }
-
-    public function purchaseProduct(Product $product, string $trackingCode): WalletTransaction
-    {
-        if ($this->balance < $product->price) {
-            throw new \Exception('موجودی کیف پول کافی نیست');
-        }
-
-        $balanceBefore = $this->balance;
-        $this->balance -= $product->price;
-        $this->save();
-
-        return $this->transactions()->create([
-            'type' => 'purchase',
-            'amount' => $product->price,
-            'balance_before' => $balanceBefore,
-            'balance_after' => $this->balance,
-            'description' => 'خرید محصول: '.$product->name,
+            'type' => 'purchase_product',
+            'coins' => -$product->price,
+            'coins_before' => $coinsBefore,
+            'coins_after' => $this->coins,
+            'paid_amount' => 0,
+            'description' => 'خرید کتاب '.$product->name,
             'product_id' => $product->id,
-            'reference_code' => $trackingCode,
-        ]);
-    }
-
-    public function refund(float $amount, ?string $description = null, ?int $productId = null, ?string $referenceCode = null): WalletTransaction
-    {
-        $balanceBefore = $this->balance;
-        $this->balance += $amount;
-        $this->save();
-
-        return $this->transactions()->create([
-            'type' => 'refund',
-            'amount' => $amount,
-            'balance_before' => $balanceBefore,
-            'balance_after' => $this->balance,
-            'description' => $description ?? 'بازگشت وجه',
-            'product_id' => $productId,
             'reference_code' => $referenceCode,
         ]);
-    }
-
-    public function hasBalance(float $amount): bool
-    {
-        return $this->balance >= $amount;
     }
 }

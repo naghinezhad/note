@@ -2222,12 +2222,12 @@
                 "tags": [
                     "Wallet"
                 ],
-                "summary": "دریافت اطلاعات کیف پول",
-                "description": "دریافت موجودی و اطلاعات کیف پول کاربر",
+                "summary": "",
+                "description": "",
                 "operationId": "92884b373e354bacec5be74f2e046805",
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق اطلاعات کیف پول",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2238,24 +2238,24 @@
                                                     "type": "integer",
                                                     "example": 1
                                                 },
+                                                "user_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
                                                 "balance": {
                                                     "type": "number",
                                                     "format": "float",
-                                                    "example": 250000
-                                                },
-                                                "user_id": {
-                                                    "type": "integer",
                                                     "example": 1
                                                 },
                                                 "created_at": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "example": "2024-01-15T10:30:00.000000Z"
+                                                    "example": ""
                                                 },
                                                 "updated_at": {
                                                     "type": "string",
                                                     "format": "date-time",
-                                                    "example": "2024-01-15T10:30:00.000000Z"
+                                                    "example": ""
                                                 }
                                             },
                                             "type": "object"
@@ -2267,7 +2267,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2275,22 +2275,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "کیف پول یافت نشد",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "کیف پول یافت نشد"
                                         }
                                     },
                                     "type": "object"
@@ -2311,14 +2295,14 @@
                 "tags": [
                     "Wallet"
                 ],
-                "summary": "دریافت تراکنش‌های کیف پول",
-                "description": "دریافت لیست تراکنش‌های کیف پول با قابلیت فیلتر و مرتب‌سازی",
+                "summary": "",
+                "description": "",
                 "operationId": "e140d9fc0ac708394f008018989ce6ad",
                 "parameters": [
                     {
                         "name": "type",
                         "in": "query",
-                        "description": "فیلتر بر اساس نوع تراکنش (deposit, withdraw, purchase, refund)",
+                        "description": "(deposit, withdraw, purchase, refund)",
                         "required": false,
                         "schema": {
                             "type": "string",
@@ -2328,13 +2312,13 @@
                                 "purchase",
                                 "refund"
                             ],
-                            "example": "purchase"
+                            "example": ""
                         }
                     },
                     {
                         "name": "per_page",
                         "in": "query",
-                        "description": "تعداد تراکنش در هر صفحه",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -2344,7 +2328,7 @@
                     {
                         "name": "page",
                         "in": "query",
-                        "description": "شماره صفحه",
+                        "description": "",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -2354,7 +2338,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "دریافت موفق لیست تراکنش‌ها",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2398,7 +2382,7 @@
                                                     },
                                                     "description": {
                                                         "type": "string",
-                                                        "example": "خرید محصول: لپ تاپ ایسوس"
+                                                        "example": ""
                                                     },
                                                     "product_id": {
                                                         "type": "integer",
@@ -2428,7 +2412,7 @@
                                                             },
                                                             "name": {
                                                                 "type": "string",
-                                                                "example": "لپ تاپ ایسوس"
+                                                                "example": ""
                                                             }
                                                         },
                                                         "type": "object",
@@ -2474,7 +2458,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2482,22 +2466,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "کیف پول یافت نشد",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "کیف پول یافت نشد"
                                         }
                                     },
                                     "type": "object"
@@ -2518,8 +2486,8 @@
                 "tags": [
                     "Wallet"
                 ],
-                "summary": "شارژ کیف پول",
-                "description": "افزایش موجودی کیف پول",
+                "summary": "",
+                "description": "",
                 "operationId": "566a24fb27cc48c154aa4e021a49547b",
                 "requestBody": {
                     "required": true,
@@ -2531,15 +2499,15 @@
                                 ],
                                 "properties": {
                                     "amount": {
-                                        "description": "مبلغ شارژ (حداقل ۱۰۰۰ تومان)",
+                                        "description": "",
                                         "type": "number",
                                         "format": "float",
-                                        "example": 100000
+                                        "example": 1
                                     },
                                     "reference_code": {
-                                        "description": "کد پیگیری پرداخت (اختیاری - حداکثر ۵۰ کاراکتر)",
+                                        "description": "",
                                         "type": "string",
-                                        "example": "PAY-123456789"
+                                        "example": ""
                                     }
                                 },
                                 "type": "object"
@@ -2549,14 +2517,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "شارژ موفق",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
                                         "message": {
                                             "type": "string",
-                                            "example": "کیف پول با موفقیت شارژ شد"
+                                            "example": ""
                                         },
                                         "transaction": {
                                             "properties": {
@@ -2589,7 +2557,7 @@
                                                 },
                                                 "description": {
                                                     "type": "string",
-                                                    "example": "شارژ کیف پول"
+                                                    "example": ""
                                                 },
                                                 "product_id": {
                                                     "type": "integer",
@@ -2621,7 +2589,7 @@
                         }
                     },
                     "401": {
-                        "description": "احراز هویت نشده",
+                        "description": "",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -2629,73 +2597,6 @@
                                         "message": {
                                             "type": "string",
                                             "example": "Unauthenticated."
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "کیف پول یافت نشد",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "کیف پول یافت نشد"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "خطای اعتبارسنجی",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "لطفاً مبلغ را وارد کنید."
-                                        },
-                                        "errors": {
-                                            "properties": {
-                                                "amount": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "مبلغ باید حداقل ۱۰۰۰ تومان باشد."
-                                                    }
-                                                },
-                                                "reference_code": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "string",
-                                                        "example": "کد پیگیری نباید بیشتر از ۵۰ کاراکتر باشد."
-                                                    }
-                                                }
-                                            },
-                                            "type": "object"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "500": {
-                        "description": "خطای سرور",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "خطا در شارژ کیف پول"
                                         }
                                     },
                                     "type": "object"

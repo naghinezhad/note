@@ -13,18 +13,21 @@ class WalletTransaction extends Model
     protected $fillable = [
         'wallet_id',
         'type',
-        'amount',
-        'balance_before',
-        'balance_after',
+        'coins',
+        'coins_before',
+        'coins_after',
+        'paid_amount',
         'description',
         'product_id',
+        'coin_package_id',
         'reference_code',
     ];
 
     protected $casts = [
-        'amount' => 'integer',
-        'balance_before' => 'integer',
-        'balance_after' => 'integer',
+        'coins' => 'integer',
+        'coins_before' => 'integer',
+        'coins_after' => 'integer',
+        'paid_amount' => 'integer',
     ];
 
     public function wallet(): BelongsTo
@@ -35,5 +38,10 @@ class WalletTransaction extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function coinPackage(): BelongsTo
+    {
+        return $this->belongsTo(CoinPackage::class);
     }
 }
