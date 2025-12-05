@@ -10,3 +10,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::job(new DeleteExpiredOtps)->daily();
+
+Schedule::command('backup:run')->dailyAt('00:00');
