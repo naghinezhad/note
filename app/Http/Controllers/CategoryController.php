@@ -172,9 +172,15 @@ class CategoryController extends Controller
     {
         $user = $request->user();
 
+        $search = $request->get('search');
+        $sortBy = $request->get('sort_by', 'newest');
+        $categoryFilter = $request->get('category_id');
+
         $categories = Category::select('id', 'name', 'color', 'order')
+            ->when($categoryFilter, fn ($q) => $q->where('id', $categoryFilter))
             ->with([
-                'products' => function ($query) use ($user) {
+                'products' => function ($query) use ($user, $search, $sortBy) {
+
                     $query->where('is_active', true)
                         ->withExists([
                             'purchasedUsers as is_purchased' => fn ($q) => $user
@@ -184,9 +190,42 @@ class CategoryController extends Controller
                             'likedUsers as is_liked' => fn ($q) => $user
                                 ? $q->where('user_id', $user->id)
                                 : $q->whereNull('user_id'),
-                        ])
-                        ->orderBy('created_at', 'desc')
-                        ->limit(20);
+                        ]);
+
+                    if ($search) {
+                        $query->where(function ($q) use ($search) {
+                            $q->where('name', 'LIKE', "%{$search}%")
+                                ->orWhere('description', 'LIKE', "%{$search}%");
+                        });
+                    }
+
+                    switch ($sortBy) {
+                        case 'newest':
+                            $query->orderBy('created_at', 'desc');
+                            break;
+                        case 'oldest':
+                            $query->orderBy('created_at', 'asc');
+                            break;
+                        case 'most_liked':
+                            $query->orderBy('likes', 'desc');
+                            break;
+                        case 'most_purchased':
+                            $query->orderBy('purchased', 'desc');
+                            break;
+                        case 'most_viewed':
+                            $query->orderBy('views', 'desc');
+                            break;
+                        case 'price_high':
+                            $query->orderBy('price', 'desc');
+                            break;
+                        case 'price_low':
+                            $query->orderBy('price', 'asc');
+                            break;
+                        default:
+                            $query->orderBy('created_at', 'desc');
+                    }
+
+                    $query->limit(20);
                 },
             ])
             ->orderBy('order')
@@ -217,37 +256,35 @@ class CategoryController extends Controller
 
         $categoriesData = $categories->map(function ($category) use ($rank) {
 
+            $productsFormatted = $category->products->map(function ($product) {
+
+                $productArray = $product->toArray();
+
+                $productArray['is_free'] = $product->price == 0;
+                $productArray['is_purchased'] = $product->is_purchased ?? false;
+                $productArray['is_liked'] = $product->is_liked ?? false;
+
+                $productArray['high_quality_image'] = URL::temporarySignedRoute(
+                    'signed.file',
+                    now()->addMinute(),
+                    ['path' => $product->high_quality_image]
+                );
+
+                $productArray['low_quality_image'] = URL::temporarySignedRoute(
+                    'signed.file',
+                    now()->addMinute(),
+                    ['path' => $product->low_quality_image]
+                );
+
+                return $productArray;
+            });
+
             return [
                 'id' => $category->id,
                 'name' => $category->name,
                 'color' => $category->color,
                 'order' => $category->order,
-
-                'products' => $category->products
-                    ->map(function ($product) {
-                        return [
-                            'id' => $product->id,
-                            'name' => $product->name,
-                            'price' => $product->price,
-                            'is_free' => $product->price == 0,
-                            'is_purchased' => $product->is_purchased,
-                            'is_liked' => $product->is_liked,
-
-                            'high_quality_image' => URL::temporarySignedRoute(
-                                'signed.file',
-                                now()->addMinute(),
-                                ['path' => $product->high_quality_image]
-                            ),
-
-                            'low_quality_image' => URL::temporarySignedRoute(
-                                'signed.file',
-                                now()->addMinute(),
-                                ['path' => $product->low_quality_image]
-                            ),
-                        ];
-                    })
-                    ->sortByDesc($rank)
-                    ->values(),
+                'products' => $productsFormatted->sortByDesc($rank)->values(),
             ];
         });
 
