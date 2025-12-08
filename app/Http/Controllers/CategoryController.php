@@ -173,61 +173,82 @@ class CategoryController extends Controller
         $user = $request->user();
 
         $categories = Category::select('id', 'name', 'color', 'order')
-            ->with(['products' => function ($query) {
-                $query->where('is_active', true)
-                    ->orderBy('created_at', 'desc')
-                    ->limit(20);
-            }])
+            ->with([
+                'products' => function ($query) use ($user) {
+                    $query->where('is_active', true)
+                        ->withExists([
+                            'purchasedUsers as is_purchased' => fn ($q) => $user
+                                ? $q->where('user_id', $user->id)
+                                : $q->whereNull('user_id'),
+
+                            'likedUsers as is_liked' => fn ($q) => $user
+                                ? $q->where('user_id', $user->id)
+                                : $q->whereNull('user_id'),
+                        ])
+                        ->orderBy('created_at', 'desc')
+                        ->limit(20);
+                },
+            ])
             ->orderBy('order')
             ->get();
 
-        $categoriesData = $categories->map(function ($category) use ($user) {
-            $categoryArray = $category->toArray();
+        $rank = function ($p) {
+            if ($p['is_purchased'] && $p['is_liked'] && $p['price'] > 0) {
+                return 7;
+            }
+            if ($p['is_purchased'] && $p['is_liked'] && $p['price'] == 0) {
+                return 6;
+            }
+            if ($p['is_purchased']) {
+                return 5;
+            }
+            if ($p['is_liked'] && $p['price'] > 0) {
+                return 4;
+            }
+            if ($p['is_liked'] && $p['price'] == 0) {
+                return 3;
+            }
+            if ($p['price'] > 0) {
+                return 2;
+            }
 
-            $categoryArray['products'] = $category->products->map(function ($product) use ($user) {
-                $productArray = $product->toArray();
+            return 1;
+        };
 
-                $productArray['is_free'] = $product->price == 0;
-                $productArray['is_purchased'] = $user ? $product->purchasedUsers()->where('user_id', $user->id)->exists() : false;
-                $productArray['is_liked'] = $user ? $product->likedUsers()->where('user_id', $user->id)->exists() : false;
+        $categoriesData = $categories->map(function ($category) use ($rank) {
 
-                $productArray['high_quality_image'] = URL::temporarySignedRoute(
-                    'signed.file',
-                    now()->addMinute(),
-                    ['path' => $product->high_quality_image]
-                );
+            return [
+                'id' => $category->id,
+                'name' => $category->name,
+                'color' => $category->color,
+                'order' => $category->order,
 
-                $productArray['low_quality_image'] = URL::temporarySignedRoute(
-                    'signed.file',
-                    now()->addMinute(),
-                    ['path' => $product->low_quality_image]
-                );
+                'products' => $category->products
+                    ->map(function ($product) {
+                        return [
+                            'id' => $product->id,
+                            'name' => $product->name,
+                            'price' => $product->price,
+                            'is_free' => $product->price == 0,
+                            'is_purchased' => $product->is_purchased,
+                            'is_liked' => $product->is_liked,
 
-                return $productArray;
-            })->sortByDesc(function ($product) {
-                if ($product['is_purchased'] && $product['is_liked'] && $product['price'] > 0) {
-                    return 7;
-                }
-                if ($product['is_purchased'] && $product['is_liked'] && $product['price'] == 0) {
-                    return 6;
-                }
-                if ($product['is_purchased']) {
-                    return 5;
-                }
-                if ($product['is_liked'] && $product['price'] > 0) {
-                    return 4;
-                }
-                if ($product['is_liked'] && $product['price'] == 0) {
-                    return 3;
-                }
-                if ($product['price'] > 0) {
-                    return 2;
-                }
+                            'high_quality_image' => URL::temporarySignedRoute(
+                                'signed.file',
+                                now()->addMinute(),
+                                ['path' => $product->high_quality_image]
+                            ),
 
-                return 1;
-            })->values()->toArray();
-
-            return $categoryArray;
+                            'low_quality_image' => URL::temporarySignedRoute(
+                                'signed.file',
+                                now()->addMinute(),
+                                ['path' => $product->low_quality_image]
+                            ),
+                        ];
+                    })
+                    ->sortByDesc($rank)
+                    ->values(),
+            ];
         });
 
         return response()->json([
