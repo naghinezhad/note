@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         $categoryIds = [];
-        for ($i = 1; $i <= 1000; $i++) {
+        for ($i = 1; $i <= 100; $i++) {
             $category = Category::create([
                 'name' => $categoryTypes[array_rand($categoryTypes)].' '.$i,
                 'color' => $colors[array_rand($colors)],
