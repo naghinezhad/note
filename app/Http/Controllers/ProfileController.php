@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProfileResource;
+use App\Models\Otp;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -137,8 +140,7 @@ class ProfileController extends Controller
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="name", type="string", example=""),
-     *             @OA\Property(property="email", type="string", example="")
+     *             @OA\Property(property="name", type="string", example="")
      *         )
      *     ),
      *
@@ -152,8 +154,7 @@ class ProfileController extends Controller
      *             @OA\Property(
      *                 property="user",
      *                 type="object",
-     *                 @OA\Property(property="name", type="string", example=""),
-     *                 @OA\Property(property="email", type="string", example="")
+     *                 @OA\Property(property="name", type="string", example="")
      *             )
      *         )
      *     ),
@@ -184,15 +185,9 @@ class ProfileController extends Controller
         $user = $request->user();
 
         // Start Validator
-        $messages = [
-            'email.email' => 'لطفاً یک ایمیل معتبر وارد کنید.',
-            'email.unique' => 'ایمیل وارد شده قبلاً ثبت شده است.',
-        ];
-
         $validator = Validator::make($request->all(), [
             'name' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255|unique:users,email,'.$user->id,
-        ], $messages);
+        ]);
 
         if ($validator->fails()) {
             return response()->json([
@@ -202,22 +197,12 @@ class ProfileController extends Controller
         }
         // End Validator
 
-        if ($request->email && $request->email !== $user->email) {
-            $user->email_verified_at = null;
-            $user->email = $request->email;
-        }
-
         $user->name = $request->name ?? $user->name;
-
         $user->save();
 
         return response()->json([
-            'message' => 'پروفایل با موفقیت آپدیت شد.',
-            'user' => [
-                'name' => $user->name,
-                'email' => $user->email,
-                'email_verified_at' => $user->email_verified_at,
-            ],
+            'message' => 'کاربر با موفقیت آپدیت شد.',
+            'user' => new ProfileResource($user),
         ]);
     }
 
@@ -315,5 +300,273 @@ class ProfileController extends Controller
         return response()->json([
             'message' => 'عکس پروفایل با موفقیت به‌روزرسانی شد.',
         ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/request-change-email",
+     *     tags={"Profile"},
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"new_email"},
+     *
+     *             @OA\Property(property="new_email", type="string", format="email", example="")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=429,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="")
+     *         )
+     *     )
+     * )
+     */
+    public function requestChangeEmail(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        // Start Validator
+        $messages = [
+            'new_email.required' => 'لطفاً ایمیل جدید را وارد کنید.',
+            'new_email.email' => 'فرمت ایمیل صحیح نیست.',
+            'new_email.unique' => 'این ایمیل قبلاً ثبت شده است.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'new_email' => 'required|email|max:255|unique:users,email',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+        // End Validator
+
+        if ($request->new_email === $user->email) {
+            return response()->json([
+                'message' => 'ایمیل جدید نمی‌تواند با ایمیل فعلی یکسان باشد.',
+            ], 422);
+        }
+
+        $result = $this->sendOtp($request->new_email, 'تغییر ایمیل');
+
+        if ($result instanceof \Illuminate\Http\JsonResponse) {
+            return $result;
+        }
+
+        return response()->json([
+            'message' => 'کد تأیید به ایمیل جدید ارسال شد.',
+        ]);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/change-email",
+     *     tags={"Profile"},
+     *     security={{"bearerAuth":{}}},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(
+     *             required={"old_email","new_email","code"},
+     *
+     *             @OA\Property(property="old_email", type="string", format="email", example=""),
+     *             @OA\Property(property="new_email", type="string", format="email", example=""),
+     *             @OA\Property(property="code", type="string", example="")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="email", type="string", example=""),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="")
+     *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="")
+     *         )
+     *     )
+     * )
+     */
+    public function changeEmail(Request $request): JsonResponse
+    {
+        $user = $request->user();
+
+        // Start Validator
+        $messages = [
+            'old_email.required' => 'لطفاً ایمیل فعلی را وارد کنید.',
+            'old_email.email' => 'فرمت ایمیل فعلی صحیح نیست.',
+            'new_email.required' => 'لطفاً ایمیل جدید را وارد کنید.',
+            'new_email.email' => 'فرمت ایمیل جدید صحیح نیست.',
+            'new_email.unique' => 'این ایمیل قبلاً ثبت شده است.',
+            'code.required' => 'لطفاً کد تأیید را وارد کنید.',
+            'code.string' => 'کد تأیید باید به صورت متن باشد.',
+        ];
+
+        $validator = Validator::make($request->all(), [
+            'old_email' => 'required|email',
+            'new_email' => 'required|email|max:255|unique:users,email',
+            'code' => 'required|string',
+        ], $messages);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => $validator->errors()->first(),
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+        // End Validator
+
+        if ($request->old_email !== $user->email) {
+            return response()->json([
+                'message' => 'ایمیل فعلی با ایمیل حساب کاربری شما مطابقت ندارد.',
+            ], 400);
+        }
+
+        if ($request->new_email === $user->email) {
+            return response()->json([
+                'message' => 'ایمیل جدید نمی‌تواند با ایمیل فعلی یکسان باشد.',
+            ], 400);
+        }
+
+        $otp = Otp::where('email', $request->new_email)
+            ->where('code', $request->code)
+            ->where('expires_at', '>', Carbon::now())
+            ->first();
+
+        if (! $otp) {
+            return response()->json([
+                'message' => 'کد تأیید نامعتبر است یا منقضی شده است.',
+            ], 400);
+        }
+
+        $user->email = $request->new_email;
+        $user->email_verified_at = Carbon::now();
+        $user->save();
+
+        $otp->delete();
+
+        return response()->json([
+            'message' => 'ایمیل با موفقیت تغییر کرد.',
+            'user' => new ProfileResource($user),
+        ]);
+    }
+
+    // sendOtp
+    private function sendOtp($email, $subject)
+    {
+        $maxRequests = 3;
+        $timeLimitHours = 3;
+
+        $windowStart = Carbon::now()->subHours($timeLimitHours);
+
+        $recentOtps = Otp::where('email', $email)
+            ->where('created_at', '>=', $windowStart)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        if ($recentOtps->count() >= $maxRequests) {
+            $oldestOtp = $recentOtps->first();
+            $nextAllowedTime = Carbon::parse($oldestOtp->created_at)->addHours($timeLimitHours);
+
+            $remainingSeconds = now()->diffInSeconds($nextAllowedTime);
+
+            $hours = floor($remainingSeconds / 3600);
+            $minutes = ceil(($remainingSeconds % 3600) / 60);
+
+            return response()->json([
+                'message' => "شما به محدودیت ارسال کد رسیده‌اید. لطفاً {$hours} ساعت و {$minutes} دقیقه دیگر دوباره تلاش کنید.",
+            ], 429);
+        }
+
+        $code = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+
+        $expiresAt = Carbon::now()->addMinutes(2);
+
+        Otp::create([
+            'email' => $email,
+            'code' => $code,
+            'expires_at' => $expiresAt,
+        ]);
+
+        Mail::raw("Code OTP: $code", function ($message) use ($email, $subject) {
+            $message->to($email)->subject($subject);
+        });
     }
 }

@@ -31,6 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/change-profile-image', [ProfileController::class, 'changeProfileImage']);
 
+    Route::post('/request-change-email', [ProfileController::class, 'requestChangeEmail']);
+
+    Route::post('/change-email', [ProfileController::class, 'changeEmail']);
+
     Route::post('/change-password', [ProfileController::class, 'changePassword']);
 
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
