@@ -935,8 +935,13 @@ class AuthController extends Controller
 
         $user->tokens()->delete();
 
+        $expiresAt = now()->addDays(30);
+        $token = $user->createToken('auth_token', [], $expiresAt)->plainTextToken;
+
         return response()->json([
             'message' => 'رمز عبور با موفقیت تغییر کرد. لطفاً دوباره وارد شوید.',
+            'token' => $token,
+            'expires_at' => $expiresAt->toDateTimeString(),
         ]);
     }
 
