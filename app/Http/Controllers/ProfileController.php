@@ -17,14 +17,14 @@ class ProfileController extends Controller
     /**
      * @OA\Get(
      *     path="/profile",
-     *     summary="",
-     *     description="",
+     *     summary="دریافت اطلاعات پروفایل",
+     *     description="بازیابی اطلاعات کامل پروفایل کاربر فعلی",
      *     tags={"Profile"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="اطلاعات پروفایل",
      *
      *         @OA\JsonContent(
      *
@@ -32,18 +32,19 @@ class ProfileController extends Controller
      *                 property="user",
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="name", type="string", example=""),
-     *                 @OA\Property(property="email", type="string", example=""),
-     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example=""),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", example=""),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="")
+     *                 @OA\Property(property="name", type="string", example=null),
+     *                 @OA\Property(property="image_profile", type="string", example=null, description="لینک فایل امضا شده برای عکس پروفایل"),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
@@ -62,6 +63,8 @@ class ProfileController extends Controller
     /**
      * @OA\Post(
      *     path="/change-password",
+     *     summary="تغییر رمز عبور",
+     *     description="تغییر رمز عبور کاربر فعلی",
      *     tags={"Profile"},
      *     security={{"bearerAuth":{}}},
      *
@@ -71,19 +74,50 @@ class ProfileController extends Controller
      *         @OA\JsonContent(
      *             required={"current_password","new_password","new_password_confirmation"},
      *
-     *             @OA\Property(property="current_password", type="string", example=""),
-     *             @OA\Property(property="new_password", type="string", example=""),
-     *             @OA\Property(property="new_password_confirmation", type="string", example="")
+     *             @OA\Property(property="current_password", type="string", example="oldpassword123", description="رمز عبور فعلی"),
+     *             @OA\Property(property="new_password", type="string", example="newpassword123", description="رمز عبور جدید (حداقل 6 کاراکتر)"),
+     *             @OA\Property(property="new_password_confirmation", type="string", example="newpassword123", description="تأیید رمز عبور جدید")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="رمز عبور با موفقیت تغییر کرد",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="رمز عبور کاربر با موفقیت تغییر کرد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="رمز عبور فعلی اشتباه",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="رمز عبور فعلی کاربر اشتباه است.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=422,
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="رمز عبور جدید باید حداقل ۶ کاراکتر باشد."),
+     *             @OA\Property(property="errors", type="object")
      *         )
      *     )
      * )
@@ -132,6 +166,8 @@ class ProfileController extends Controller
     /**
      * @OA\Post(
      *     path="/edit-profile",
+     *     summary="ویرایش پروفایل",
+     *     description="به‌روزرسانی اطلاعات پروفایل کاربر (نام)",
      *     tags={"Profile"},
      *     security={{"bearerAuth":{}}},
      *
@@ -140,42 +176,48 @@ class ProfileController extends Controller
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="name", type="string", example="")
+     *             @OA\Property(property="name", type="string", example="محمد حسین", description="نام کاربر (اختیاری)")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="پروفایل با موفقیت به‌روزرسانی شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="کاربر با موفقیت آپدیت شد."),
      *             @OA\Property(
      *                 property="user",
      *                 type="object",
-     *                 @OA\Property(property="name", type="string", example="")
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="محمد حسین"),
+     *                 @OA\Property(property="image_profile", type="string", example=null),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="نام باید کمتر از 255 کاراکتر باشد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )
@@ -209,6 +251,8 @@ class ProfileController extends Controller
     /**
      * @OA\Post(
      *     path="/change-profile-image",
+     *     summary="تغییر عکس پروفایل",
+     *     description="آپلود تصویر جدید برای عکس پروفایل کاربر (حداکثر 2 مگابایت)",
      *     tags={"Profile"},
      *     security={{"bearerAuth":{}}},
      *
@@ -225,7 +269,7 @@ class ProfileController extends Controller
      *                     property="image_profile",
      *                     type="string",
      *                     format="binary",
-     *                     description=""
+     *                     description="فایل تصویر (JPG, PNG, etc.)"
      *                 )
      *             )
      *         )
@@ -233,33 +277,31 @@ class ProfileController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="Profile image updated successfully",
+     *         description="عکس پروفایل با موفقیت به‌روزرسانی شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
-     *             @OA\Property(property="image_profile", type="string", example=""),
-     *             @OA\Property(property="image_profile_signed", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="عکس پروفایل با موفقیت به‌روزرسانی شد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="Validation Error",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="لطفاً یک عکس انتخاب کنید.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )
@@ -305,6 +347,8 @@ class ProfileController extends Controller
     /**
      * @OA\Post(
      *     path="/request-change-email",
+     *     summary="درخواست تغییر ایمیل",
+     *     description="ارسال کد OTP برای تغییر ایمیل کاربر",
      *     tags={"Profile"},
      *     security={{"bearerAuth":{}}},
      *
@@ -314,47 +358,57 @@ class ProfileController extends Controller
      *         @OA\JsonContent(
      *             required={"new_email"},
      *
-     *             @OA\Property(property="new_email", type="string", format="email", example="")
+     *             @OA\Property(property="new_email", type="string", format="email", example="newemail@example.com", description="ایمیل جدید")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="کد تأیید ارسال شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کد تأیید به ایمیل جدید ارسال شد.")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=400,
+     *         description="ایمیل جدید با فعلی یکسان است",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="ایمیل جدید نمی‌تواند با ایمیل فعلی یکسان باشد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل جدید را وارد کنید.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=429,
-     *         description="",
+     *         description="درخواست بیش از حد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="شما به محدودیت ارسال کد رسیده‌اید. لطفاً 3 ساعت و 0 دقیقه دیگر دوباره تلاش کنید.")
      *         )
      *     )
      * )
@@ -402,6 +456,8 @@ class ProfileController extends Controller
     /**
      * @OA\Post(
      *     path="/change-email",
+     *     summary="تأیید و تغییر ایمیل",
+     *     description="تأیید کد OTP و تغییر نهایی ایمیل کاربر",
      *     tags={"Profile"},
      *     security={{"bearerAuth":{}}},
      *
@@ -411,55 +467,60 @@ class ProfileController extends Controller
      *         @OA\JsonContent(
      *             required={"old_email","new_email","code"},
      *
-     *             @OA\Property(property="old_email", type="string", format="email", example=""),
-     *             @OA\Property(property="new_email", type="string", format="email", example=""),
-     *             @OA\Property(property="code", type="string", example="")
+     *             @OA\Property(property="old_email", type="string", format="email", example="oldemail@example.com", description="ایمیل فعلی کاربر"),
+     *             @OA\Property(property="new_email", type="string", format="email", example="newemail@example.com", description="ایمیل جدید"),
+     *             @OA\Property(property="code", type="string", example="1234", description="کد تأیید 4 رقمی")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="ایمیل با موفقیت تغییر کرد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="ایمیل با موفقیت تغییر کرد."),
      *             @OA\Property(
      *                 property="user",
      *                 type="object",
-     *                 @OA\Property(property="email", type="string", example=""),
-     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="")
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example=null),
+     *                 @OA\Property(property="email", type="string", example="newemail@example.com"),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="image_profile", type="string", example=null),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=400,
-     *         description="",
+     *         description="کد نامعتبر یا ایمیل فعلی نامطابق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="ایمیل فعلی با ایمیل حساب کاربری شما مطابقت ندارد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل فعلی را وارد کنید.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )

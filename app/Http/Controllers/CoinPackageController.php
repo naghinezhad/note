@@ -14,45 +14,58 @@ class CoinPackageController extends Controller
     /**
      * @OA\Get(
      *     path="/coin-packages",
-     *     summary="",
-     *     description="",
+     *     summary="دریافت لیست پکیج‌های کوین",
+     *     description="بازیابی لیست تمام پکیج‌های کوین فعال برای خریداری",
      *     tags={"Coin Packages"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="",
+     *         description="جستجو بر اساس نام پکیج",
      *         required=false,
      *
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="string", example="پکیج 100 کوین")
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="لیست پکیج‌ها دریافت شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
      *             @OA\Property(
-     *                 property="transaction",
-     *                 type="object",
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="name", type="string", example=""),
-     *                 @OA\Property(property="description", type="string", example=""),
-     *                 @OA\Property(property="image", type="string", example=""),
-     *                 @OA\Property(property="coins", type="integer", example=1),
-     *                 @OA\Property(property="price", type="integer", example=1),
-     *                 @OA\Property(property="discount_percentage", type="integer", example=1),
-     *                 @OA\Property(property="is_active", type="boolean", example=true),
-     *                 @OA\Property(property="created_at", type="string", format="date-time", example=""),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time", example=""),
-     *                 @OA\Property(property="final_price", type="integer", example=1),
-     *                 @OA\Property(property="discount_amount", type="integer", example=1),
-     *                 @OA\Property(property="link_cafebazaar", type="string", example=""),
-     *                 @OA\Property(property="link_myket", type="string", example="")
+     *                 property="data",
+     *                 type="array",
+     *
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="پکیج 100 کوین"),
+     *                     @OA\Property(property="description", type="string", example="پکیج مقدماتی"),
+     *                     @OA\Property(property="image", type="string", example="https://example.com/storage/images/package-1.jpg?signature=xxx", description="لینک فایل امضا شده برای تصویر"),
+     *                     @OA\Property(property="coins", type="integer", example=100, description="تعداد کوین"),
+     *                     @OA\Property(property="price", type="integer", example=100000, description="قیمت اصلی"),
+     *                     @OA\Property(property="discount_percentage", type="integer", example=10, description="درصد تخفیف"),
+     *                     @OA\Property(property="is_active", type="boolean", example=true),
+     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                     @OA\Property(property="final_price", type="integer", example=90000, description="قیمت بعد از تخفیف"),
+     *                     @OA\Property(property="discount_amount", type="integer", example=10000, description="مبلغ تخفیف"),
+     *                     @OA\Property(property="link_cafebazaar", type="string", example="https://cafebazaar.ir/...", description="لینک کافه بازار (اختیاری)"),
+     *                     @OA\Property(property="link_myket", type="string", example="https://myket.ir/...", description="لینک مایکت (اختیاری)")
+     *                 )
      *             )
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=401,
+     *         description="عدم احراز هویت",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     )
      * )
@@ -94,8 +107,8 @@ class CoinPackageController extends Controller
     /**
      * @OA\Post(
      *     path="/coin-packages/purchase-package",
-     *     summary="Purchase a coin package",
-     *     description="Handles the purchase of a selected coin package, validates payment, and updates the user's wallet.",
+     *     summary="خریداری پکیج کوین",
+     *     description="خریداری یک پکیج کوین، تأیید مبلغ، و به‌روزرسانی کیف پول",
      *     tags={"Coin Packages"},
      *     security={{"bearerAuth":{}}},
      *
@@ -105,32 +118,33 @@ class CoinPackageController extends Controller
      *         @OA\JsonContent(
      *             required={"coin_package_id", "paid_amount", "pay_reference_code"},
      *
-     *             @OA\Property(property="coin_package_id", type="integer", example=1, description="ID of the coin package to purchase"),
-     *             @OA\Property(property="paid_amount", type="integer", example=100, description="Amount paid for the package"),
-     *             @OA\Property(property="pay_reference_code", type="string", example="abc123", description="Payment reference code")
+     *             @OA\Property(property="coin_package_id", type="integer", example=1, description="شناسه پکیج کوین"),
+     *             @OA\Property(property="paid_amount", type="integer", example=90000, description="مبلغ پرداخت شده (باید برابر با final_price باشد)"),
+     *             @OA\Property(property="pay_reference_code", type="string", example="PAY-20230101-ABC123", description="کد پیگیری پرداخت از درگاه پرداخت")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="Successful purchase",
+     *         description="پکیج با موفقیت خریداری شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="Package purchased successfully"),
+     *             @OA\Property(property="message", type="string", example="پکیج با موفقیت خریداری شد."),
      *             @OA\Property(
      *                 property="transaction",
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="wallet_id", type="integer", example=1),
-     *                 @OA\Property(property="type", type="string", example="purchase"),
-     *                 @OA\Property(property="coins", type="integer", example=100),
-     *                 @OA\Property(property="coins_before", type="integer", example=0),
-     *                 @OA\Property(property="coins_after", type="integer", example=100),
-     *                 @OA\Property(property="paid_amount", type="integer", example=100),
-     *                 @OA\Property(property="description", type="string", example="Coin package purchase"),
+     *                 @OA\Property(property="type", type="string", example="buy"),
+     *                 @OA\Property(property="coins", type="integer", example=100, description="کوین اضافه شده"),
+     *                 @OA\Property(property="coins_before", type="integer", example=0, description="موجودی قبل از خریداری"),
+     *                 @OA\Property(property="coins_after", type="integer", example=100, description="موجودی بعد از خریداری"),
+     *                 @OA\Property(property="paid_amount", type="integer", example=90000),
+     *                 @OA\Property(property="description", type="string", example="خریداری پکیج کوین"),
+     *                 @OA\Property(property="product_id", type="integer", example=null),
      *                 @OA\Property(property="coin_package_id", type="integer", example=1),
-     *                 @OA\Property(property="reference_code", type="string", example="abc123"),
+     *                 @OA\Property(property="reference_code", type="string", example="NOTIN-RC-PACKAGE-20230101-ABCDEF"),
      *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             )
@@ -139,15 +153,34 @@ class CoinPackageController extends Controller
      *
      *     @OA\Response(
      *         response=404,
-     *         description=""
+     *         description="پکیج یافت نشد",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="پکیج انتخابی در دسترس نیست")
+     *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=422,
-     *         description=""
+     *         description="خطای اعتبارسنجی",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="مبلغ پرداختی باید دقیقاً برابر با قیمت نهایی پکیج باشد"),
+     *             @OA\Property(property="required_amount", type="integer", example=90000),
+     *             @OA\Property(property="paid_amount", type="integer", example=85000)
+     *         )
      *     ),
+     *
      *     @OA\Response(
      *         response=500,
-     *         description=""
+     *         description="خطای سرور",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="خطا در خرید پکیج")
+     *         )
      *     )
      * )
      */

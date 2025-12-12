@@ -13,24 +13,24 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *     path="/categories",
-     *     summary="",
-     *     description="",
+     *     summary="دریافت لیست دسته بندی‌ها",
+     *     description="بازیابی لیست تمام دسته بندی‌ها با امکان جستجو",
      *     tags={"Categories"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="search",
      *         in="query",
-     *         description="",
+     *         description="جستجو بر اساس نام دسته بندی",
      *         required=false,
      *
-     *         @OA\Schema(type="string", example="")
+     *         @OA\Schema(type="string", example="مدل‌های سه بعدی")
      *     ),
      *
      *     @OA\Parameter(
      *         name="page",
      *         in="query",
-     *         description="",
+     *         description="شماره صفحه",
      *         required=false,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -38,7 +38,7 @@ class CategoryController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="لیست دسته بندی‌ها دریافت شد",
      *
      *         @OA\JsonContent(
      *
@@ -50,27 +50,27 @@ class CategoryController extends Controller
      *                     type="object",
      *
      *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example=""),
-     *                     @OA\Property(property="color", type="string", example=""),
-     *                     @OA\Property(property="order", type="integer", example=1)
+     *                     @OA\Property(property="name", type="string", example="مدل‌های سه بعدی"),
+     *                     @OA\Property(property="color", type="string", example="#FF5733", description="رنگ دسته بندی"),
+     *                     @OA\Property(property="order", type="integer", example=1, description="ترتیب نمایش")
      *                 )
      *             ),
      *             @OA\Property(
      *                 property="pagination",
      *                 type="object",
-     *                 @OA\Property(property="total", type="integer", example=1),
-     *                 @OA\Property(property="per_page", type="integer", example=1),
+     *                 @OA\Property(property="total", type="integer", example=15),
+     *                 @OA\Property(property="per_page", type="integer", example=10),
      *                 @OA\Property(property="current_page", type="integer", example=1),
-     *                 @OA\Property(property="last_page", type="integer", example=1),
+     *                 @OA\Property(property="last_page", type="integer", example=2),
      *                 @OA\Property(property="from", type="integer", example=1),
-     *                 @OA\Property(property="to", type="integer", example=1)
+     *                 @OA\Property(property="to", type="integer", example=10)
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
@@ -104,14 +104,45 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *     path="/categories/with-products",
-     *     summary="",
-     *     description="",
+     *     summary="دریافت دسته بندی‌ها با محصولات",
+     *     description="بازیابی دسته بندی‌ها و محصولات فعال آن‌ها (حداکثر 20 محصول برای هر دسته)",
      *     tags={"Categories"},
      *     security={{"bearerAuth":{}}},
      *
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="جستجو در نام و توضیحات محصولات",
+     *         required=false,
+     *
+     *         @OA\Schema(type="string", example="تصویر")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="sort_by",
+     *         in="query",
+     *         description="مرتب سازی محصولات",
+     *         required=false,
+     *
+     *         @OA\Schema(
+     *             type="string",
+     *             enum={"newest", "oldest", "most_liked", "most_purchased", "most_viewed", "price_high", "price_low"},
+     *             example="newest"
+     *         )
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         description="فیلتر بر اساس دسته بندی خاص",
+     *         required=false,
+     *
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="دسته بندی‌ها با محصولات دریافت شد",
      *
      *         @OA\JsonContent(
      *
@@ -123,33 +154,34 @@ class CategoryController extends Controller
      *                     type="object",
      *
      *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="name", type="string", example=""),
-     *                     @OA\Property(property="color", type="string", example=""),
+     *                     @OA\Property(property="name", type="string", example="مدل‌های سه بعدی"),
+     *                     @OA\Property(property="color", type="string", example="#FF5733"),
      *                     @OA\Property(property="order", type="integer", example=1),
      *                     @OA\Property(
      *                         property="products",
      *                         type="array",
+     *                         description="محصولات مرتب شده بر اساس ترجیح کاربر (خریداری + لایک شده محبوب‌تر است)",
      *
      *                         @OA\Items(
      *                             type="object",
      *
      *                             @OA\Property(property="id", type="integer", example=1),
-     *                             @OA\Property(property="name", type="string", example=""),
-     *                             @OA\Property(property="high_quality_image", type="string", example=""),
-     *                             @OA\Property(property="low_quality_image", type="string", example=""),
-     *                             @OA\Property(property="price", type="number", format="float", example=1),
-     *                             @OA\Property(property="description", type="string", example=""),
-     *                             @OA\Property(property="likes", type="integer", example=1),
-     *                             @OA\Property(property="views", type="integer", example=1),
-     *                             @OA\Property(property="purchased", type="integer", example=1),
+     *                             @OA\Property(property="name", type="string", example="تصویر سه بعدی"),
+     *                             @OA\Property(property="high_quality_image", type="string", example="https://example.com/storage/images/product-1-hq.jpg?signature=xxx"),
+     *                             @OA\Property(property="low_quality_image", type="string", example="https://example.com/storage/images/product-1-lq.jpg?signature=xxx"),
+     *                             @OA\Property(property="price", type="integer", example=100),
+     *                             @OA\Property(property="description", type="string", example="توضیح محصول"),
+     *                             @OA\Property(property="likes", type="integer", example=25),
+     *                             @OA\Property(property="views", type="integer", example=150),
+     *                             @OA\Property(property="purchased", type="integer", example=10),
      *                             @OA\Property(property="category_id", type="integer", example=1),
      *                             @OA\Property(property="is_active", type="boolean", example=true),
      *                             @OA\Property(property="is_3d", type="boolean", example=true),
-     *                             @OA\Property(property="created_at", type="string", format="date-time", example=""),
-     *                             @OA\Property(property="updated_at", type="string", format="date-time", example=""),
-     *                             @OA\Property(property="is_free", type="boolean", example=true),
-     *                             @OA\Property(property="is_purchased", type="boolean", example=true),
-     *                             @OA\Property(property="is_liked", type="boolean", example=true)
+     *                             @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                             @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                             @OA\Property(property="is_free", type="boolean", example=false),
+     *                             @OA\Property(property="is_purchased", type="boolean", example=false),
+     *                             @OA\Property(property="is_liked", type="boolean", example=false)
      *                         )
      *                     )
      *                 )
@@ -159,7 +191,7 @@ class CategoryController extends Controller
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *
@@ -296,15 +328,15 @@ class CategoryController extends Controller
     /**
      * @OA\Get(
      *     path="/categories/{id}",
-     *     summary="",
-     *     description="",
+     *     summary="دریافت جزئیات دسته بندی",
+     *     description="بازیابی اطلاعات کامل یک دسته بندی و آمار محصولات آن",
      *     tags={"Categories"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Parameter(
      *         name="id",
      *         in="path",
-     *         description="",
+     *         description="شناسه دسته بندی",
      *         required=true,
      *
      *         @OA\Schema(type="integer", example=1)
@@ -312,38 +344,38 @@ class CategoryController extends Controller
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="اطلاعات دسته بندی دریافت شد",
      *
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="id", type="integer", example=1),
-     *             @OA\Property(property="name", type="string", example=""),
-     *             @OA\Property(property="color", type="string", example=""),
-     *             @OA\Property(property="description", type="string", example=""),
+     *             @OA\Property(property="name", type="string", example="مدل‌های سه بعدی"),
+     *             @OA\Property(property="color", type="string", example="#FF5733"),
+     *             @OA\Property(property="description", type="string", example="توضیح دسته بندی"),
      *             @OA\Property(property="order", type="integer", example=1),
-     *             @OA\Property(property="created_at", type="string", format="date-time", example=""),
-     *             @OA\Property(property="updated_at", type="string", format="date-time", example=""),
-     *             @OA\Property(property="total_likes", type="integer", example=1),
-     *             @OA\Property(property="total_views", type="integer", example=1),
-     *             @OA\Property(property="total_purchased", type="integer", example=1),
-     *             @OA\Property(property="total_3d_products", type="integer", example=1),
-     *             @OA\Property(property="total_paid_products", type="integer", example=1)
+     *             @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *             @OA\Property(property="total_likes", type="integer", example=500, description="کل لایک‌های تمام محصولات"),
+     *             @OA\Property(property="total_views", type="integer", example=5000, description="کل مشاهدات تمام محصولات"),
+     *             @OA\Property(property="total_purchased", type="integer", example=100, description="کل خریدهای تمام محصولات"),
+     *             @OA\Property(property="total_3d_products", type="integer", example=25, description="تعداد محصولات سه بعدی"),
+     *             @OA\Property(property="total_paid_products", type="integer", example=30, description="تعداد محصولات پولی")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=404,
-     *         description="",
+     *         description="دسته بندی پیدا نشد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="دسته بندی یافت نشد")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="عدم احراز هویت",
      *
      *         @OA\JsonContent(
      *

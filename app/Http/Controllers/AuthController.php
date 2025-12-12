@@ -17,8 +17,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/register",
-     *     summary="",
-     *     description="",
+     *     summary="ثبت نام کاربر جدید",
+     *     description="ایجاد حساب کاربری جدید و ارسال کد تأیید به ایمیل",
      *     tags={"Authentication"},
      *
      *     @OA\RequestBody(
@@ -27,28 +27,28 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email","password"},
      *
-     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description=""),
-     *             @OA\Property(property="password", type="string", format="password", minLength=6, example="123456", description="")
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر (باید منحصر به فرد باشد)"),
+     *             @OA\Property(property="password", type="string", format="password", minLength=6, example="123456", description="رمز عبور (حداقل 6 کاراکتر)")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="ثبت نام موفق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="ثبت‌نام با موفقیت انجام شد. کد تأیید ارسال شد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل خود را وارد کنید."),
      *             @OA\Property(
      *                 property="errors",
      *                 type="object",
@@ -56,14 +56,14 @@ class AuthController extends Controller
      *                     property="email",
      *                     type="array",
      *
-     *                     @OA\Items(type="string", example="")
+     *                     @OA\Items(type="string", example="لطفاً ایمیل خود را وارد کنید.")
      *                 ),
      *
      *                 @OA\Property(
      *                     property="password",
      *                     type="array",
      *
-     *                     @OA\Items(type="string", example="")
+     *                     @OA\Items(type="string", example="رمز عبور باید حداقل ۶ کاراکتر باشد.")
      *                 )
      *             )
      *         )
@@ -110,8 +110,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/verify-otp",
-     *     summary="",
-     *     description="",
+     *     summary="تأیید کد OTP ثبت نام",
+     *     description="تأیید کد ارسال شده به ایمیل برای اتمام ثبت نام و اخذ توکن احراز هویت",
      *     tags={"Authentication"},
      *
      *     @OA\RequestBody(
@@ -120,46 +120,51 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email","code"},
      *
-     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description=""),
-     *             @OA\Property(property="code", type="string", example="123456", description="")
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="code", type="string", example="1234", description="کد تأیید 4 رقمی")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="تأیید موفق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="احراز هویت با موفقیت انجام شد."),
      *             @OA\Property(
      *                 property="user",
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example=null),
      *                 @OA\Property(property="email", type="string", example="user@example.com"),
-     *                 @OA\Property(property="email_verified_at", type="string", format="date-time")
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="image_profile", type="string", example=null),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             ),
-     *             @OA\Property(property="token", type="string", example="")
+     *             @OA\Property(property="token", type="string", example="1|AbCdEfGhIjKlMnOpQrStUvWxYz"),
+     *             @OA\Property(property="expires_at", type="string", format="date-time", example="2023-01-31T00:00:00Z")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=400,
-     *         description="",
+     *         description="کد نامعتبر یا منقضی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کد تأیید نامعتبر است یا منقضی شده است.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل را وارد کنید."),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     )
@@ -220,8 +225,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/login",
-     *     summary="",
-     *     description="",
+     *     summary="ورود کاربر با ایمیل و رمز عبور",
+     *     description="احراز هویت کاربر استفاده کننده از ایمیل و رمز عبور و اخذ توکن API",
      *     tags={"Authentication"},
      *
      *     @OA\RequestBody(
@@ -230,45 +235,51 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email","password"},
      *
-     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description=""),
-     *             @OA\Property(property="password", type="string", format="password", example="123456", description="")
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="password", type="string", format="password", example="123456", description="رمز عبور")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="ورود موفق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="ورود با موفقیت انجام شد."),
      *             @OA\Property(
      *                 property="user",
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="email", type="string", example="user@example.com")
+     *                 @OA\Property(property="name", type="string", example=null),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="image_profile", type="string", example=null),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             ),
-     *             @OA\Property(property="token", type="string", example="")
+     *             @OA\Property(property="token", type="string", example="1|AbCdEfGhIjKlMnOpQrStUvWxYz"),
+     *             @OA\Property(property="expires_at", type="string", format="date-time", example="2023-01-31T00:00:00Z")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="احراز هویت ناموفق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کاربری با این ایمیل یافت نشد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل را وارد کنید."),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     )
@@ -327,8 +338,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/request-otp-login",
-     *     summary="",
-     *     description="",
+     *     summary="درخواست کد ورود یکبار مصرف",
+     *     description="ارسال کد OTP به ایمیل کاربر برای ورود بدون رمز عبور",
      *     tags={"Authentication"},
      *
      *     @OA\RequestBody(
@@ -337,38 +348,48 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email"},
      *
-     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="")
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="کد با موفقیت ارسال شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کد ورود برای شما ارسال شد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=400,
-     *         description="",
+     *         description="ایمیل پیدا نشد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کاربری با این ایمیل یافت نشد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل را وارد کنید."),
      *             @OA\Property(property="errors", type="object")
+     *         )
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=429,
+     *         description="درخواست بیش از حد",
+     *
+     *         @OA\JsonContent(
+     *
+     *             @OA\Property(property="message", type="string", example="شما به محدودیت ارسال کد رسیده‌اید. لطفاً 3 ساعت و 0 دقیقه دیگر دوباره تلاش کنید.")
      *         )
      *     )
      * )
@@ -417,8 +438,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/login-with-otp",
-     *     summary="",
-     *     description="",
+     *     summary="ورود با کد یکبار مصرف",
+     *     description="احراز هویت کاربر با استفاده از کد OTP و اخذ توکن API",
      *     tags={"Authentication"},
      *
      *     @OA\RequestBody(
@@ -427,45 +448,51 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email","code"},
      *
-     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description=""),
-     *             @OA\Property(property="code", type="string", example="123456", description="")
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="code", type="string", example="1234", description="کد تأیید 4 رقمی")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="ورود موفق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="ورود کاربر با موفقیت انجام شد."),
      *             @OA\Property(
      *                 property="user",
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="email", type="string", example="user@example.com")
+     *                 @OA\Property(property="name", type="string", example=null),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="image_profile", type="string", example=null),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
      *             ),
-     *             @OA\Property(property="token", type="string", example="")
+     *             @OA\Property(property="token", type="string", example="1|AbCdEfGhIjKlMnOpQrStUvWxYz"),
+     *             @OA\Property(property="expires_at", type="string", format="date-time", example="2023-01-31T00:00:00Z")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=400,
-     *         description="",
+     *         description="کد نامعتبر یا منقضی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کد تأیید نامعتبر است یا منقضی شده است.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل را وارد کنید."),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     )
@@ -536,38 +563,38 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/logout",
-     *     summary="",
-     *     description="",
+     *     summary="خروج از حساب",
+     *     description="حذف توکن فعلی و خروج کاربر از حساب",
      *     tags={"Authentication"},
      *     security={{"bearerAuth":{}}},
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="خروج موفق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="خروج از حساب با موفقیت انجام شد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="توکن معتبر نیست",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="توکن معتبر یافت نشد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=500,
-     *         description="",
+     *         description="خطای سرور",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="خطایی در خروج از حساب رخ داد.")
      *         )
      *     )
      * )
@@ -596,8 +623,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/forgot-password",
-     *     summary="",
-     *     description="",
+     *     summary="درخواست بازیابی رمز عبور",
+     *     description="ارسال کد OTP برای بازیابی رمز عبور فراموش شده",
      *     tags={"Authentication"},
      *
      *     @OA\RequestBody(
@@ -606,48 +633,48 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email"},
      *
-     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="")
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="کد با موفقیت ارسال شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کد بازیابی رمز عبور برای شما ارسال شد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=400,
-     *         description="",
+     *         description="ایمیل پیدا نشد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کاربری با این ایمیل یافت نشد.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل را وارد کنید."),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=429,
-     *         description="",
+     *         description="درخواست بیش از حد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="شما به محدودیت ارسال کد رسیده‌اید. لطفاً 3 ساعت و 0 دقیقه دیگر دوباره تلاش کنید.")
      *         )
      *     )
      * )
@@ -696,8 +723,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/verify-forgot-password-otp",
-     *     summary="",
-     *     description="",
+     *     summary="تأیید کد بازیابی رمز عبور",
+     *     description="تأیید کد OTP ارسال شده و دریافت توکن بازیابی برای تغییر رمز عبور",
      *     tags={"Authentication"},
      *
      *     @OA\RequestBody(
@@ -706,39 +733,39 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *             required={"email","code"},
      *
-     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description=""),
-     *             @OA\Property(property="code", type="string", example="1234", description="")
+     *             @OA\Property(property="email", type="string", format="email", example="user@example.com", description="ایمیل کاربر"),
+     *             @OA\Property(property="code", type="string", example="1234", description="کد تأیید 4 رقمی")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="تأیید موفق",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
-     *             @OA\Property(property="reset_token", type="string", example="", description="")
+     *             @OA\Property(property="message", type="string", example="کد تأیید شد. می‌توانید رمز عبور جدید را وارد کنید."),
+     *             @OA\Property(property="reset_token", type="string", example="1|AbCdEfGhIjKlMnOpQrStUvWxYz", description="توکن برای تغییر رمز عبور (مدت اعتبار 10 دقیقه)")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=400,
-     *         description="",
+     *         description="کد نامعتبر یا کاربر پیدا نشد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="کد تأیید نامعتبر است یا منقضی شده است.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً ایمیل را وارد کنید."),
      *             @OA\Property(property="errors", type="object")
      *         )
      *     )
@@ -801,8 +828,8 @@ class AuthController extends Controller
     /**
      * @OA\Post(
      *     path="/reset-password",
-     *     summary="",
-     *     description="",
+     *     summary="تغییر رمز عبور",
+     *     description="تغییر رمز عبور کاربر با استفاده از توکن بازیابی و اخذ توکن API جدید",
      *     tags={"Authentication"},
      *     security={{"bearerAuth":{}}},
      *
@@ -818,65 +845,67 @@ class AuthController extends Controller
      *                 format="password",
      *                 minLength=6,
      *                 example="newpassword123",
-     *                 description=""
+     *                 description="رمز عبور جدید (حداقل 6 کاراکتر)"
      *             ),
      *             @OA\Property(
      *                 property="new_password_confirmation",
      *                 type="string",
      *                 format="password",
      *                 example="newpassword123",
-     *                 description=""
+     *                 description="تأیید رمز عبور جدید"
      *             )
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=200,
-     *         description="",
+     *         description="رمز عبور با موفقیت تغییر کرد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="رمز عبور با موفقیت تغییر کرد. لطفاً دوباره وارد شوید."),
+     *             @OA\Property(property="token", type="string", example="1|AbCdEfGhIjKlMnOpQrStUvWxYz"),
+     *             @OA\Property(property="expires_at", type="string", format="date-time", example="2023-01-31T00:00:00Z")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=400,
-     *         description="",
+     *         description="رمز عبورها مطابقت ندارند",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="رمز عبور و تأیید رمز عبور مطابقت ندارند.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=401,
-     *         description="",
+     *         description="توکن معتبر نیست",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=403,
-     *         description="",
+     *         description="دسترسی رد شد",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example="")
+     *             @OA\Property(property="message", type="string", example="این توکن مجاز به تغییر رمز عبور نیست.")
      *         )
      *     ),
      *
      *     @OA\Response(
      *         response=422,
-     *         description="",
+     *         description="خطای اعتبارسنجی",
      *
      *         @OA\JsonContent(
      *
-     *             @OA\Property(property="message", type="string", example=""),
+     *             @OA\Property(property="message", type="string", example="لطفاً رمز عبور جدید را وارد کنید."),
      *             @OA\Property(
      *                 property="errors",
      *                 type="object",
@@ -884,7 +913,7 @@ class AuthController extends Controller
      *                     property="new_password",
      *                     type="array",
      *
-     *                     @OA\Items(type="string", example="")
+     *                     @OA\Items(type="string", example="رمز عبور جدید باید حداقل ۶ کاراکتر باشد.")
      *                 )
      *             )
      *         )
