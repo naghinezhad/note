@@ -864,6 +864,17 @@ class AuthController extends Controller
      *         @OA\JsonContent(
      *
      *             @OA\Property(property="message", type="string", example="رمز عبور با موفقیت تغییر کرد. لطفاً دوباره وارد شوید."),
+     *             @OA\Property(
+     *                 property="user",
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example=null),
+     *                 @OA\Property(property="email", type="string", example="user@example.com"),
+     *                 @OA\Property(property="email_verified_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="image_profile", type="string", example=null),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-01-01T00:00:00Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-01-01T00:00:00Z")
+     *             ),
      *             @OA\Property(property="token", type="string", example="1|AbCdEfGhIjKlMnOpQrStUvWxYz"),
      *             @OA\Property(property="expires_at", type="string", format="date-time", example="2023-01-31T00:00:00Z")
      *         )
@@ -969,6 +980,7 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'رمز عبور با موفقیت تغییر کرد. لطفاً دوباره وارد شوید.',
+            'user' => new ProfileResource($user),
             'token' => $token,
             'expires_at' => $expiresAt->toDateTimeString(),
         ]);
